@@ -14,4 +14,6 @@ struct GameState {
     bool spadesBroken = false;
     int team1Score = 0;
     int team2Score = 0;
+    int team1Bags = 0;
+    int team2Bags = 0;
 };

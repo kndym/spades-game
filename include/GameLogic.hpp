@@ -12,4 +12,5 @@ namespace GameLogic {
     void updateScores(GameState& state, int& team1RoundPoints, int& team2RoundPoints);
     bool isGameOver(const GameState& state);
     void resetForNewRound(GameState& state, int dealerIndex);
+    bool canTram(const GameState& state);
 }

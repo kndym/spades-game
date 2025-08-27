@@ -1,16 +1,20 @@
 
 #include "../include/UI.hpp"
 #include <iostream>
+#include <fcntl.h> // For _O_U16TEXT
+
+
 
 std::string UI::suitToString(Suit suit) {
     switch (suit) {
-        case Suit::CLUBS:    return "♣";
-        case Suit::DIAMONDS: return "♦";
-        case Suit::HEARTS:   return "♥";
-        case Suit::SPADES:   return "♠";
+        case Suit::CLUBS:    return "C";
+        case Suit::DIAMONDS: return "D";
+        case Suit::HEARTS:   return "H";
+        case Suit::SPADES:   return "S";
     }
     return "";
 }
+
 
 std::string UI::rankToString(Rank rank) {
     switch (rank) {
@@ -65,8 +69,22 @@ void UI::printTurnInfo(const GameState& state) {
 }
 
 void UI::printTrickWinner(int winnerIndex, const std::vector<Card>& trick) {
+    Card winningCard = trick[0];
+    for (size_t i = 1; i < trick.size(); ++i) {
+        const auto& card = trick[i];
+        if (card.suit == winningCard.suit) {
+            if (card.rank > winningCard.rank) {
+                winningCard = card;
+            }
+        } else if (card.suit == Suit::SPADES) {
+            if (winningCard.suit != Suit::SPADES || card.rank > winningCard.rank) {
+                winningCard = card;
+            }
+        }
+    }
+
     std::cout << "Trick Winner: Player " << winnerIndex + 1 << " with ";
-    printCard(trick.back());
+    printCard(winningCard);
     std::cout << std::endl;
 }
 

@@ -11,6 +11,8 @@
 #include <thread>
 #include <fstream>
 #include <vector>
+#include <fcntl.h> // For _O_U16TEXT
+
 
 void runSimulationMode() {
     GameState state;
@@ -18,7 +20,7 @@ void runSimulationMode() {
     int dealerIndex = 0;
 
     while (!GameLogic::isGameOver(state)) {
-        GameLogic::resetForNewRound(state, dealerIndex);
+        // GameLogic::resetForNewRound(state, dealerIndex);
         UI::printRoundStart(state);
         
         GameLogic::initializeDeck(state.deck);
@@ -35,6 +37,13 @@ void runSimulationMode() {
             state.currentTrick.clear();
             for (int i = 0; i < 4; ++i) {
                 UI::printTurnInfo(state);
+
+                if (GameLogic::canTram(state)) {
+                    std::cout << "Player " << state.currentPlayerIndex + 1 << " has TRAM." << std::endl;
+                    int remainingTricks = 13 - trick;
+                    state.players[state.currentPlayerIndex].tricksWon += remainingTricks;
+                    goto end_of_round;
+                }
 
                 auto validMoves = GameLogic::getValidMoves(state);
                 int moveIndex = bots[state.currentPlayerIndex].getMove(state, validMoves);
@@ -62,6 +71,7 @@ void runSimulationMode() {
             state.trickLeaderIndex = trickWinner;
         }
 
+    end_of_round:
         int t1p, t2p; // unused in this mode
         GameLogic::updateScores(state, t1p, t2p);
         dealerIndex = (dealerIndex + 1) % 4;
@@ -88,7 +98,7 @@ void runDataGenerationMode(int numGames, const std::string& outputFile) {
 
         while (!GameLogic::isGameOver(state)) {
             roundNum++;
-            GameLogic::resetForNewRound(state, dealerIndex);
+            // GameLogic::resetForNewRound(state, dealerIndex);
             
             GameLogic::initializeDeck(state.deck);
             GameLogic::shuffleDeck(state.deck);
@@ -101,6 +111,11 @@ void runDataGenerationMode(int numGames, const std::string& outputFile) {
             for (int trick = 0; trick < 13; ++trick) {
                 state.currentTrick.clear();
                 for (int turn = 0; turn < 4; ++turn) {
+                    if (GameLogic::canTram(state)) {
+                        int remainingTricks = 13 - trick;
+                        state.players[state.currentPlayerIndex].tricksWon += remainingTricks;
+                        goto end_of_round_data;
+                    }
                     auto validMoves = GameLogic::getValidMoves(state);
                     int moveIndex = bots[state.currentPlayerIndex].getMove(state, validMoves);
                     Card playedCard = state.players[state.currentPlayerIndex].hand[moveIndex];
@@ -115,6 +130,7 @@ void runDataGenerationMode(int numGames, const std::string& outputFile) {
                 state.trickLeaderIndex = trickWinner;
             }
             
+        end_of_round_data:
             int team1Bid = state.players[0].bid + state.players[2].bid;
             int team2Bid = state.players[1].bid + state.players[3].bid;
             int team1Tricks = state.players[0].tricksWon + state.players[2].tricksWon;
@@ -146,11 +162,9 @@ int main(int argc, char* argv[]) {
         std::cerr << "    --output <filename.csv> (required for data mode)\n";
         return 1;
     }
-
     std::string mode = "";
     int numGames = 0;
     std::string outputFile = "";
-
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "--mode" && i + 1 < argc) {

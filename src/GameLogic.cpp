@@ -74,13 +74,94 @@ int GameLogic::determineTrickWinner(const GameState& state) {
 }
 
 void GameLogic::updateScores(GameState& state, int& team1RoundPoints, int& team2RoundPoints) {
-    int team1Tricks = state.players[0].tricksWon + state.players[2].tricksWon;
-    int team1Bid = state.players[0].bid + state.players[2].bid;
-    int team2Tricks = state.players[1].tricksWon + state.players[3].tricksWon;
-    int team2Bid = state.players[1].bid + state.players[3].bid;
+    team1RoundPoints = 0;
+    team2RoundPoints = 0;
 
-    team1RoundPoints = (team1Tricks >= team1Bid) ? (team1Bid * 10 + (team1Tricks - team1Bid)) : (-team1Bid * 10);
-    team2RoundPoints = (team2Tricks >= team2Bid) ? (team2Bid * 10 + (team2Tricks - team2Bid)) : (-team2Bid * 10);
+    // Team 1
+    int team1Bid = 0;
+    int team1Tricks = 0;
+    bool player0Nil = state.players[0].bid == 0;
+    bool player2Nil = state.players[2].bid == 0;
+
+    if (player0Nil) {
+        if (state.players[0].tricksWon == 0) {
+            team1RoundPoints += 100;
+        } else {
+            team1RoundPoints -= 100;
+        }
+    } else {
+        team1Bid += state.players[0].bid;
+        team1Tricks += state.players[0].tricksWon;
+    }
+
+    if (player2Nil) {
+        if (state.players[2].tricksWon == 0) {
+            team1RoundPoints += 100;
+        } else {
+            team1RoundPoints -= 100;
+        }
+    } else {
+        team1Bid += state.players[2].bid;
+        team1Tricks += state.players[2].tricksWon;
+    }
+
+    if (team1Bid > 0) {
+        if (team1Tricks >= team1Bid) {
+            team1RoundPoints += team1Bid * 10;
+            int overtricks = team1Tricks - team1Bid;
+            team1RoundPoints += overtricks;
+            state.team1Bags += overtricks;
+            if (state.team1Bags >= 10) {
+                team1RoundPoints -= 100;
+                state.team1Bags -= 10;
+            }
+        } else {
+            team1RoundPoints -= team1Bid * 10;
+        }
+    }
+
+    // Team 2
+    int team2Bid = 0;
+    int team2Tricks = 0;
+    bool player1Nil = state.players[1].bid == 0;
+    bool player3Nil = state.players[3].bid == 0;
+
+    if (player1Nil) {
+        if (state.players[1].tricksWon == 0) {
+            team2RoundPoints += 100;
+        } else {
+            team2RoundPoints -= 100;
+        }
+    } else {
+        team2Bid += state.players[1].bid;
+        team2Tricks += state.players[1].tricksWon;
+    }
+
+    if (player3Nil) {
+        if (state.players[3].tricksWon == 0) {
+            team2RoundPoints += 100;
+        } else {
+            team2RoundPoints -= 100;
+        }
+    } else {
+        team2Bid += state.players[3].bid;
+        team2Tricks += state.players[3].tricksWon;
+    }
+
+    if (team2Bid > 0) {
+        if (team2Tricks >= team2Bid) {
+            team2RoundPoints += team2Bid * 10;
+            int overtricks = team2Tricks - team2Bid;
+            team2RoundPoints += overtricks;
+            state.team2Bags += overtricks;
+            if (state.team2Bags >= 10) {
+                team2RoundPoints -= 100;
+                state.team2Bags -= 10;
+            }
+        } else {
+            team2RoundPoints -= team2Bid * 10;
+        }
+    }
 
     state.team1Score += team1RoundPoints;
     state.team2Score += team2RoundPoints;
@@ -91,13 +172,37 @@ bool GameLogic::isGameOver(const GameState& state) {
            state.team1Score <= -200 || state.team2Score <= -200;
 }
 
-void GameLogic::resetForNewRound(GameState& state, int dealerIndex) {
-    for (auto& player : state.players) {
-        player.hand.clear();
-        player.tricksWon = 0;
-        player.bid = 0;
+
+
+bool GameLogic::canTram(const GameState& state) {
+    const auto& currentPlayer = state.players[state.currentPlayerIndex];
+    const auto& hand = currentPlayer.hand;
+    int remainingTricks = 13 - (state.players[0].tricksWon + state.players[1].tricksWon + state.players[2].tricksWon + state.players[3].tricksWon);
+
+    if (hand.size() < remainingTricks) {
+        return false;
     }
-    state.spadesBroken = false;
-    state.trickLeaderIndex = (dealerIndex + 1) % 4;
-    state.currentPlayerIndex = (dealerIndex + 1) % 4;
+
+    std::vector<Card> spadesInHand;
+    for (const auto& card : hand) {
+        if (card.suit == Suit::SPADES) {
+            spadesInHand.push_back(card);
+        }
+    }
+
+    if (spadesInHand.size() < remainingTricks) {
+        return false;
+    }
+
+    std::sort(spadesInHand.begin(), spadesInHand.end(), [](const Card& a, const Card& b) {
+        return a.rank > b.rank;
+    });
+
+    for (int i = 0; i < remainingTricks; ++i) {
+        if (spadesInHand[i].rank != static_cast<Rank>(12 - i)) {
+            return false;
+        }
+    }
+
+    return true;
 }
