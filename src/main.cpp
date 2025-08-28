@@ -3,16 +3,13 @@
 #include "../include/Bot.hpp"
 #include "../include/GameState.hpp"
 #include "../include/GameLogic.hpp"
-#include "../include/Bot.hpp"
 #include "../include/UI.hpp"
 #include <iostream>
 #include <string>
+#include <vector>
+#include <fstream>
 #include <chrono>
 #include <thread>
-#include <fstream>
-#include <vector>
-#include <fcntl.h> // For _O_U16TEXT
-
 
 void runSimulationMode() {
     GameState state;
@@ -20,7 +17,7 @@ void runSimulationMode() {
     int dealerIndex = 0;
 
     while (!GameLogic::isGameOver(state)) {
-        // GameLogic::resetForNewRound(state, dealerIndex);
+        GameLogic::resetForNewRound(state, dealerIndex);
         UI::printRoundStart(state);
         
         GameLogic::initializeDeck(state.deck);
@@ -87,7 +84,7 @@ void runDataGenerationMode(int numGames, const std::string& outputFile) {
     }
     
     // Write CSV Header
-    csvFile << "GameID,RoundNum,Team1Bid,Team2Bid,Team1Tricks,Team2Tricks,Team1RoundPoints,Team2RoundPoints,Team1FinalScore,Team2FinalScore\n";
+    csvFile << "GameID,RoundNum,Team1Bid,Team2Bid,Team1Tricks,Team2Tricks,Team1RoundPoints,Team2RoundPoints,Team1Bags,Team2Bags,Team1FinalScore,Team2FinalScore\n";
 
     std::vector<RandomBot> bots(4);
 
@@ -98,7 +95,7 @@ void runDataGenerationMode(int numGames, const std::string& outputFile) {
 
         while (!GameLogic::isGameOver(state)) {
             roundNum++;
-            // GameLogic::resetForNewRound(state, dealerIndex);
+            GameLogic::resetForNewRound(state, dealerIndex);
             
             GameLogic::initializeDeck(state.deck);
             GameLogic::shuffleDeck(state.deck);
@@ -141,7 +138,7 @@ void runDataGenerationMode(int numGames, const std::string& outputFile) {
             
             csvFile << i + 1 << "," << roundNum << "," << team1Bid << "," << team2Bid << ","
                     << team1Tricks << "," << team2Tricks << "," << team1RoundPoints << ","
-                    << team2RoundPoints << "," << state.team1Score << "," << state.team2Score << "\n";
+                    << team2RoundPoints << "," << state.team1Bags << "," << state.team2Bags << "," << state.team1Score << "," << state.team2Score << "\n";
 
             dealerIndex = (dealerIndex + 1) % 4;
         }

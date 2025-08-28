@@ -206,3 +206,16 @@ bool GameLogic::canTram(const GameState& state) {
 
     return true;
 }
+
+void GameLogic::resetForNewRound(GameState& state, int dealerIndex) {
+    state.deck.clear();
+    state.spadesBroken = false;
+    state.trickLeaderIndex = (dealerIndex + 1) % 4;
+    state.currentPlayerIndex = (dealerIndex + 1) % 4;
+    
+    for (auto& player : state.players) {
+        player.hand.clear();
+        player.bid = 0;
+        player.tricksWon = 0;
+    }
+}
