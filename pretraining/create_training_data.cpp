@@ -56,9 +56,29 @@ int main() {
     for (auto const& [gameID, rounds] : games) {
         if (rounds.empty()) continue;
 
-        const auto& lastRound = rounds.back();
-        int team1Won = lastRound.team1Score > lastRound.team2Score ? 1 : 0;
-        int team2Won = 1 - team1Won;
+        int team1Won = 0;
+        int team2Won = 0;
+
+        const RoundData* finalRound = nullptr;
+
+        for(const auto& round : rounds) {
+            if (round.team1Score >= 500 || round.team2Score >= 500) {
+                finalRound = &round;
+                break;
+            }
+        }
+
+        if (finalRound == nullptr) {
+            finalRound = &rounds.back();
+        }
+
+        if (finalRound->team1Score > finalRound->team2Score) {
+            team1Won = 1;
+        } else {
+            team1Won = 0;
+        }
+        team2Won = 1 - team1Won;
+
 
         int prevTeam1Score = 0;
         int prevTeam2Score = 0;
@@ -68,7 +88,7 @@ int main() {
         for (const auto& round : rounds) {
             // Team 1 perspective
             outputFile << prevTeam1Score << "," << prevTeam1Bags << ","
-                       << prevTeam2Score << "," << prevTeam1Bags << ","
+                       << prevTeam2Score << "," << prevTeam2Bags << ","
                        << team1Won << "\n";
 
             // Team 2 perspective

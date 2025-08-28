@@ -23,7 +23,7 @@ def main():
 
     # --- Data Loading and Preprocessing ---
     print("Loading and preprocessing data...")
-    data = pd.read_csv(csv_filename)
+    data = pd.read_csv(csv_filename).sample(frac=1, random_state=42)
 
     X = data[['team_points', 'team_bags', 'other_team_points', 'other_team_bags']].values
     y = data['game_win'].values
