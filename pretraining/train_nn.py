@@ -17,6 +17,10 @@ def main():
     show_graphs_input = input("Do you want to display graphs of training progress? (y/n): ").lower()
     show_graphs = show_graphs_input == 'y'
 
+    model_filename = "weights/" + input("Enter the name of the output .h5 file: ")
+    if not model_filename.endswith('.h5'):
+        model_filename += '.h5'
+
     # --- Data Loading and Preprocessing ---
     print("Loading and preprocessing data...")
     data = pd.read_csv(csv_filename)
@@ -34,11 +38,7 @@ def main():
     print("Building neural network model...")
     model = tf.keras.models.Sequential([
         tf.keras.layers.Input(shape=(4,)),
-        tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(64, activation='relu'),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(32, activation='relu'),
+        tf.keras.layers.Dense(4, activation='relu'),
         tf.keras.layers.Dense(1, activation='sigmoid')
     ])
 
@@ -49,7 +49,7 @@ def main():
     # --- Training ---
     print("Starting training...")
     history = model.fit(X_train, y_train,
-                        epochs=50, # You can adjust the number of epochs
+                        epochs=10, # You can adjust the number of epochs
                         validation_data=(X_val, y_val),
                         callbacks=[TqdmCallback(verbose=1)],
                         verbose=0) # Set to 0 to let tqdm handle the output
@@ -60,7 +60,6 @@ def main():
     print(f"Validation Loss: {loss:.4f}")
 
     # --- Save the Model ---
-    model_filename = 'spades_win_predictor.h5'
     model.save(model_filename)
     print(f"Model saved to {model_filename}")
 
