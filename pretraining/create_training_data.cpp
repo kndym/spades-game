@@ -31,7 +31,7 @@ int main() {
         return 1;
     }
 
-    outputFile << "team_points,team_bags,other_team_points,other_team_bags,game_win\n";
+    outputFile << "total_points,point_differential,team_bags,other_team_bags,game_win\n";
 
     std::string line;
     std::getline(inputFile, line); // Skip header
@@ -87,13 +87,13 @@ int main() {
 
         for (const auto& round : rounds) {
             // Team 1 perspective
-            outputFile << prevTeam1Score << "," << prevTeam1Bags << ","
-                       << prevTeam2Score << "," << prevTeam2Bags << ","
+            outputFile << prevTeam1Score + prevTeam2Score << "," << prevTeam1Score - prevTeam2Score << ","
+                       << prevTeam1Bags << "," << prevTeam2Bags << ","
                        << team1Won << "\n";
 
             // Team 2 perspective
-            outputFile << prevTeam2Score << "," << prevTeam2Bags << ","
-                       << prevTeam1Score << "," << prevTeam1Bags << ","
+            outputFile << prevTeam1Score + prevTeam2Score << "," << prevTeam2Score - prevTeam1Score << ","
+                       << prevTeam2Bags << "," << prevTeam1Bags << ","
                        << team2Won << "\n";
 
             prevTeam1Score = round.team1Score;

@@ -1,7 +1,6 @@
 import pandas as pd
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 from tqdm.keras import TqdmCallback
 import matplotlib.pyplot as plt
 import os
@@ -25,20 +24,17 @@ def main():
     print("Loading and preprocessing data...")
     data = pd.read_csv(csv_filename).sample(frac=1, random_state=42)
 
-    X = data[['team_points', 'team_bags', 'other_team_points', 'other_team_bags']].values
+    X = data[['total_points', 'point_differential', 'team_bags', 'other_team_bags']].values
     y = data['game_win'].values
 
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    scaler = StandardScaler()
-    X_train = scaler.fit_transform(X_train)
-    X_val = scaler.transform(X_val)
 
     # --- Neural Network Model ---
     print("Building neural network model...")
     model = tf.keras.models.Sequential([
         tf.keras.layers.Input(shape=(4,)),
-        tf.keras.layers.Dense(4, activation='relu'),
+        tf.keras.layers.Lambda(lambda x: x / [1000.0, 100.0, 10.0, 10.0]),
+        tf.keras.layers.Dense(4, activation='softplus'),
         tf.keras.layers.Dense(1, activation='sigmoid')
     ])
 
@@ -48,8 +44,9 @@ def main():
 
     # --- Training ---
     print("Starting training...")
+    epochs = int(input("Number of Epochs: "))
     history = model.fit(X_train, y_train,
-                        epochs=10, # You can adjust the number of epochs
+                        epochs=epochs, # You can adjust the number of epochs
                         validation_data=(X_val, y_val),
                         callbacks=[TqdmCallback(verbose=1)],
                         verbose=0) # Set to 0 to let tqdm handle the output
