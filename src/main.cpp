@@ -1,9 +1,9 @@
-#include "../include/SpadesTypes.hpp"
-#include "../include/Player.hpp"
-#include "../include/Bot.hpp"
-#include "../include/GameState.hpp"
-#include "../include/GameLogic.hpp"
-#include "../include/UI.hpp"
+#include "include/SpadesTypes.hpp"
+#include "include/Player.hpp"
+#include "include/Bot.hpp"
+#include "include/GameState.hpp"
+#include "include/GameLogic.hpp"
+#include "include/UI.hpp"
 #include <iostream>
 #include <string>
 #include <vector>

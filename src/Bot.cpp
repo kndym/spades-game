@@ -1,4 +1,4 @@
-#include "../include/Bot.hpp"
+#include "include/Bot.hpp"
 #include <algorithm>
 #include <iostream>
 #include <map>
