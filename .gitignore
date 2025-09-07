@@ -7,6 +7,8 @@
 *.onnx
 *.keras
 *.txt
-SpadesEngineVS/
-.vscode/
-build/
+*.o
+*.pth
+build
+SpadesEngineVS
+.vscode
