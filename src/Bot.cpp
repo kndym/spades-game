@@ -179,7 +179,9 @@ int RandomBot::getLowestCardOfLongestSuit(const Player& player, const std::vecto
 
     size_t maxLength = 0;
     Suit longestSuit = suitMap.begin()->first;
-    for (auto const& [suit, indices] : suitMap) {
+    for (auto it = suitMap.begin(); it != suitMap.end(); ++it) {
+        Suit suit = it->first;
+        const std::vector<int>& indices = it->second;
         if (indices.size() > maxLength) {
             maxLength = indices.size();
             longestSuit = suit;
@@ -214,7 +216,9 @@ int RandomBot::getLowestCardOfShortestSuit(const Player& player, const std::vect
 
     size_t minLength = 14;
     Suit shortestSuit = suitMap.begin()->first;
-    for (auto const& [suit, indices] : suitMap) {
+    for (auto it = suitMap.begin(); it != suitMap.end(); ++it) {
+        Suit suit = it->first;
+        const std::vector<int>& indices = it->second;
         if (indices.size() < minLength) {
             minLength = indices.size();
             shortestSuit = suit;

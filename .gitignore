@@ -3,3 +3,10 @@
 *.exe 
 *.h5
 *.png
+*.exe
+*.onnx
+*.keras
+*.txt
+SpadesEngineVS/
+.vscode/
+build/
