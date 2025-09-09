@@ -27,6 +27,7 @@ void runSimulationMode() {
         std::cout << "--- Bidding Phase ---" << std::endl;
         for(int i = 0; i < 4; ++i) {
             state.players[i].bid = bots[i].getBid(state.players[i]);
+            state.players[i].bid = bots[i].getBid(state.players[i], state);
             std::cout << "Player " << i+1 << " bids " << state.players[i].bid << std::endl;
         }
 
@@ -103,6 +104,7 @@ void runDataGenerationMode(int numGames, const std::string& outputFile) {
 
             for(int p_idx = 0; p_idx < 4; ++p_idx) {
                 state.players[p_idx].bid = bots[p_idx].getBid(state.players[p_idx]);
+                state.players[p_idx].bid = bots[p_idx].getBid(state.players[p_idx], state);
             }
 
             for (int trick = 0; trick < 13; ++trick) {

@@ -1,19 +1,25 @@
-#pragma once
+#ifndef GAMESTATE_HPP
+#define GAMESTATE_HPP
 
-#include <vector>
 #include "Player.hpp"
-#include "SpadesTypes.hpp"
+#include <vector>
+#include <array>
 
-// Represents the entire state of the game
 struct GameState {
     std::vector<Card> deck;
-    std::vector<Player> players{4};
-    int currentPlayerIndex = 0;
-    std::vector<Card> currentTrick;
-    int trickLeaderIndex = 0;
-    bool spadesBroken = false;
+    std::array<Player, 4> players;
+
     int team1Score = 0;
     int team2Score = 0;
     int team1Bags = 0;
     int team2Bags = 0;
+
+    int currentPlayerIndex = 0;
+    int trickLeaderIndex = 0;
+    int bidsMade = 0;
+
+    bool spadesBroken = false;
+    std::vector<Card> currentTrick;
 };
+
+#endif // GAMESTATE_HPP

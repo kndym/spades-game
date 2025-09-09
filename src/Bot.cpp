@@ -2,13 +2,15 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <random> // Included for std::mt19937
 
 RandomBot::RandomBot() {
     std::random_device rd;
     rng.seed(rd());
 }
 
-int RandomBot::getBid(const Player& player) {
+int RandomBot::getBid(const Player& player, const GameState& state) {
+    // Original RandomBot bid logic
     int potentialTricks = 0;
     for(const auto& card : player.hand) {
         if (card.suit == Suit::SPADES && card.rank >= Rank::QUEEN) potentialTricks++;
@@ -83,10 +85,10 @@ int RandomBot::getMove(const GameState& state, const std::vector<int>& validMove
 }
 
 
-// HELPER FUNCTIONS
+// HELPER FUNCTIONS (Your existing helper functions for RandomBot should be here)
 
 Suit RandomBot::getLeadSuit(const std::vector<Card>& trick) const {
-    return trick.empty() ? Suit::CLUBS : trick[0].suit; // Default to clubs if trick is empty, though this should be handled by caller
+    return trick.empty() ? Suit::CLUBS : trick[0].suit; 
 }
 
 int RandomBot::getPartnerIndex(int playerIndex) const {
@@ -94,7 +96,7 @@ int RandomBot::getPartnerIndex(int playerIndex) const {
 }
 
 Card RandomBot::getWinningCardOfTrick(const std::vector<Card>& trick) const {
-    if (trick.empty()) return {}; // Return a default card if trick is empty
+    if (trick.empty()) return {}; 
     
     Card winningCard = trick[0];
     for (size_t i = 1; i < trick.size(); ++i) {
@@ -154,7 +156,7 @@ int RandomBot::getBestWinningCard(const Player& player, const std::vector<int>& 
     Rank bestRank = Rank::TWO;
     for (int index : validMoves) {
         const Card& card = player.hand[index];
-        if (card.suit != Suit::SPADES && card.rank >= bestRank) { // Use >= to handle case of single high card
+        if (card.suit != Suit::SPADES && card.rank >= bestRank) { 
             bestRank = card.rank;
             bestCardIndex = index;
         }
@@ -179,9 +181,7 @@ int RandomBot::getLowestCardOfLongestSuit(const Player& player, const std::vecto
 
     size_t maxLength = 0;
     Suit longestSuit = suitMap.begin()->first;
-    for (auto it = suitMap.begin(); it != suitMap.end(); ++it) {
-        Suit suit = it->first;
-        const std::vector<int>& indices = it->second;
+    for (auto const& [suit, indices] : suitMap) {
         if (indices.size() > maxLength) {
             maxLength = indices.size();
             longestSuit = suit;
@@ -216,9 +216,7 @@ int RandomBot::getLowestCardOfShortestSuit(const Player& player, const std::vect
 
     size_t minLength = 14;
     Suit shortestSuit = suitMap.begin()->first;
-    for (auto it = suitMap.begin(); it != suitMap.end(); ++it) {
-        Suit suit = it->first;
-        const std::vector<int>& indices = it->second;
+    for (auto const& [suit, indices] : suitMap) {
         if (indices.size() < minLength) {
             minLength = indices.size();
             shortestSuit = suit;
@@ -260,7 +258,7 @@ int RandomBot::getLowestCardOfSuit(const Player& player, Suit suit, const std::v
 
 bool RandomBot::canWinTrick(const Player& player, const std::vector<Card>& trick, Suit leadSuit, const std::vector<int>& validMoves) const {
     Card winningCard = getWinningCardOfTrick(trick);
-    if (winningCard.suit != leadSuit) return false; // A spade has already been played
+    if (winningCard.suit != leadSuit) return false; 
 
     for (int index : validMoves) {
         const Card& myCard = player.hand[index];
@@ -279,7 +277,7 @@ int RandomBot::getLowestWinningCardOfSuit(const Player& player, const std::vecto
     for (int index : validMoves) {
         const Card& myCard = player.hand[index];
         if (myCard.suit == leadSuit && myCard.rank > winningCard.rank) {
-            if (myCard.rank <= bestRank) { // find lowest winning card
+            if (myCard.rank <= bestRank) { 
                 bestRank = myCard.rank;
                 bestCardIndex = index;
             }

@@ -4,7 +4,7 @@
 
 int main() {
     try {
-        ONNXModel nn3("C:/Users/Kevin/Github/spades-game/models/nn3_model.onnx");
+        ONNXModel nn3("C:/Users/knday/Github/spades-game/models/nn3_model.onnx");
         std::cout << "NN3 model loaded successfully!" << std::endl;
         // Create dummy input data matching the model's expectation
         std::vector<float> input_data = {600.0f, 100.0f, 5.0f, 3.0f}; // total_points, diff, bags, other_bags

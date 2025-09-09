@@ -2,12 +2,14 @@
 
 #include "GameState.hpp"
 #include <random>
+#include "IBot.hpp"
 
-class RandomBot {
+
+class RandomBot : public IBot {
 public:
     RandomBot();
-    int getBid(const Player& player);
-    int getMove(const GameState& state, const std::vector<int>& validMoves);
+    int getBid(const Player& player, const GameState& state) override;
+    int getMove(const GameState& state, const std::vector<int>& validMoves) override;
 
 private:
     std::mt19937 rng;
