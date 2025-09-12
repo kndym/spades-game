@@ -21,7 +21,7 @@ private:
     std::vector<TrainingSample> game_buffer;
     std::ofstream file;
 
-    // Feature extraction helpers (these remain the same)
+    // Feature extraction helpers remain the same
     std::vector<float> extractBidFeatures(const GameState& state);
     std::vector<float> extractPlayFeatures(const GameState& state);
 };

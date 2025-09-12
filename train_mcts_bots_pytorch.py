@@ -94,7 +94,8 @@ def export_model_to_onnx(model, dummy_input, filepath):
         do_constant_folding=True,
         input_names=['input'],
         output_names=['output'],
-        dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}}
+        dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}},
+        dynamo=True
     )
     print("Export complete.")
 

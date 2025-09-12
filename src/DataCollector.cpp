@@ -2,8 +2,8 @@
 #include "include/MCTSBot.hpp"
 #include <stdexcept>
 
-DataCollector::DataCollector(const std::string & filepath) {
-    // Open in binary mode as Protobuf is a binary format
+DataCollector::DataCollector(const std::string& filepath) {
+    // Open in binary mode, as Protobuf serialization is binary
     file.open(filepath, std::ios::binary | std::ios::app);
     if (!file.is_open()) {
         throw std::runtime_error("Could not open data file for writing: " + filepath);
@@ -17,18 +17,18 @@ DataCollector::~DataCollector() {
 }
 
 void DataCollector::record(const GameState& state, MCTSBot& bot, bool isBidding) {
-    // Create a Protobuf message object instead of a custom struct
+    // 1. Create a Protobuf message object
     TrainingSample sample;
 
+    // 2. Populate the message using the generated, type-safe setters
     sample.set_is_bidding(isBidding);
     sample.set_player_idx(state.currentPlayerIndex);
 
-    // Get features and policy targets
     std::vector<float> features = isBidding ? extractBidFeatures(state) : extractPlayFeatures(state);
     std::vector<float> policy = bot.getLastActionProbs();
     auto value_vec = bot.getLastValueEstimate();
 
-    // Populate the Protobuf message using the generated setters
+    // For 'repeated' fields, loop and use the 'add_*' method
     for (float f : features) {
         sample.add_state_features(f);
     }
@@ -38,31 +38,35 @@ void DataCollector::record(const GameState& state, MCTSBot& bot, bool isBidding)
 
     if (!value_vec.empty()) {
         sample.set_value_target(value_vec[0]);
-    } else {
-        sample.set_value_target(0.5f); // Default value
+    }
+    else {
+        sample.set_value_target(0.5f); // Set a default
     }
 
-    // actual_game_win_value will be set in finalize()
+    // 3. Add the populated object to the in-memory buffer
+    // The 'actual_game_win_value' will be set later in finalize()
     game_buffer.push_back(sample);
 }
 
 void DataCollector::finalize(int winning_team_id) {
     for (auto& sample : game_buffer) {
-        // Determine the final game outcome for this player's team
+        // a. Set the final field on the buffered sample
         int sample_player_team_id = sample.player_idx() % 2;
         float actual_win = (sample_player_team_id == winning_team_id) ? 1.0f : 0.0f;
         sample.set_actual_game_win_value(actual_win);
 
-        // Serialize the entire message to a binary string
+        // b. Serialize the entire message object to a binary string
         std::string serialized_data;
         if (!sample.SerializeToString(&serialized_data)) {
+            // This is a critical error if it fails
             throw std::runtime_error("Failed to serialize training sample.");
         }
 
-        // Write the data using a size-delimited format. This is robust.
-        // 1. Write the size of the upcoming message as a 32-bit integer.
-        // 2. Write the actual message data.
-        int32_t size = serialized_data.size();
+        // c. Write the data using a robust, size-delimited format
+        //    This prevents any possible misalignment during reading.
+        //    First, write the size of the message as a 4-byte integer.
+        //    Then, write the actual message data.
+        int32_t size = static_cast<int32_t>(serialized_data.size());
         file.write(reinterpret_cast<const char*>(&size), sizeof(size));
         file.write(serialized_data.c_str(), size);
     }
@@ -70,9 +74,11 @@ void DataCollector::finalize(int winning_team_id) {
 }
 
 
-// --- Feature extraction helpers do not need to change ---
+// --- Feature Extraction Helpers ---
+// These functions do NOT need to change. Their job is simply to generate
+// the feature vectors, which are then used to populate the Protobuf message.
+
 std::vector<float> DataCollector::extractBidFeatures(const GameState& state) {
-    // ... same implementation as before
     std::vector<float> features;
     features.push_back(static_cast<float>(state.team1Score));
     features.push_back(static_cast<float>(state.team2Score));
@@ -85,7 +91,6 @@ std::vector<float> DataCollector::extractBidFeatures(const GameState& state) {
 }
 
 std::vector<float> DataCollector::extractPlayFeatures(const GameState& state) {
-    // ... same implementation as before
     std::vector<float> features;
     features.push_back(static_cast<float>(state.team1Score));
     features.push_back(static_cast<float>(state.team2Score));
