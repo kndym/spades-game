@@ -3,10 +3,10 @@
 
 #include "GameState.hpp"
 #include "MCTSBot.hpp"
+#include "test.pb.h" // Include the generated Protobuf header
 #include <fstream>
 #include <vector>
 #include <string>
-#include <numeric> // For std::accumulate
 
 class DataCollector {
 public:
@@ -17,20 +17,13 @@ public:
     void finalize(int winning_team_id);
 
 private:
-    struct TrainingSample {
-        std::vector<float> state_features;
-        std::vector<float> policy_target;
-        float value_target; // MCTS value estimate, NOT final game outcome for NN3
-        int player_idx; // Track which player made the move for perspective during finalization
-    };
-
-    std::ofstream file;
+    // The buffer now holds the type-safe Protobuf message objects
     std::vector<TrainingSample> game_buffer;
+    std::ofstream file;
 
-    // Feature extraction helpers
+    // Feature extraction helpers (these remain the same)
     std::vector<float> extractBidFeatures(const GameState& state);
     std::vector<float> extractPlayFeatures(const GameState& state);
 };
-
 
 #endif // DATACOLLECTOR_HPP

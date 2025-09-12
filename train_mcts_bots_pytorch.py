@@ -6,6 +6,7 @@ from torch.utils.data import TensorDataset, DataLoader
 import os
 import argparse
 from tqdm import tqdm
+import test_pb2 as pb# Import the generated module
 
 # --- Model Definitions ---
 
@@ -38,32 +39,48 @@ class PlayingModelNN2(nn.Module):
     def forward(self, x):
         return self.network(x)
 
-# --- Helper Functions ---
-
-def load_training_data(filepath):
-    """Loads training data from the custom binary format created by the C++ app."""
+# --- NEW, TYPE-SAFE DATA LOADING FUNCTION ---
+def load_training_data_proto(filepath):
+    """Loads training data from the size-delimited Protobuf binary format."""
     samples = {'bidding': [], 'playing': []}
     with open(filepath, 'rb') as f:
         while True:
-            is_bidding_bytes = f.read(4)
-            if not is_bidding_bytes: break
-            is_bidding = np.frombuffer(is_bidding_bytes, dtype=np.int32)[0]
+            # 1. Read the 4-byte size prefix
+            size_bytes = f.read(4)
+            if not size_bytes:
+                break # End of file
 
-            state_size = np.frombuffer(f.read(4), dtype=np.int32)[0]
-            state_vec = np.frombuffer(f.read(4 * state_size), dtype=np.float32)
+            size = np.frombuffer(size_bytes, dtype=np.int32)[0]
 
-            policy_size = np.frombuffer(f.read(4), dtype=np.int32)[0]
-            policy_vec = np.frombuffer(f.read(4 * policy_size), dtype=np.float32)
+            # 2. Read the actual message data
+            msg_bytes = f.read(size)
+            if len(msg_bytes) != size:
+                print("Warning: Incomplete message found at end of file.")
+                continue
 
-            value = np.frombuffer(f.read(4), dtype=np.float32)[0]
+            # 3. Parse the message using the generated Protobuf class
+            sample = pb.TrainingSample()
+            sample.ParseFromString(msg_bytes)
 
-            if is_bidding == 1 and state_vec.shape[0] == 8 and policy_vec.shape[0] == 14:
-                samples['bidding'].append((state_vec, policy_vec, value))
-            elif is_bidding == 0:
-                # Note: NN2 feature extraction and policy handling is a placeholder
-                # We will skip adding playing data for now to keep it simple
+            # 4. Extract the data in a 100% type-safe way
+            state_vec = np.array(sample.state_features, dtype=np.float32)
+            policy_vec = np.array(sample.policy_target, dtype=np.float32)
+            
+            # You can choose which value to use for training.
+            # The MCTS value is often better for policy heads.
+            value = sample.value_target
+            
+            # Add to the correct list
+            if sample.is_bidding:
+                # Optional sanity check
+                if state_vec.shape[0] == 8 and policy_vec.shape[0] == 14:
+                    samples['bidding'].append((state_vec, policy_vec, value))
+            else:
+                # Placeholder for playing data
                 pass
+
     return samples
+
 
 def export_model_to_onnx(model, dummy_input, filepath):
     """Exports a PyTorch model to ONNX format."""
@@ -115,8 +132,9 @@ def main(args):
         generate_random_onnx_model('nn1', bid_input_size, args.output_model_path)
         generate_random_onnx_model('nn2', play_input_size, args.output_model_path)
         return
-    print("Loading training data from binary file...")
-    all_data = load_training_data(args.input_data_path)
+    print("Loading training data from Protobuf file...")
+    # Call the new, safe data loader
+    all_data = load_training_data_proto(args.input_data_path)
 
     # --- Train Bidding Model (NN1) ---
     if all_data['bidding']:

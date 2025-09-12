@@ -1,0 +1,22 @@
+// training_sample.proto
+syntax = "proto3";
+
+message TrainingSample {
+  // Flag to distinguish between bidding and playing samples
+  bool is_bidding = 1;
+
+  // The index of the player who made the decision
+  int32 player_idx = 2;
+
+  // The feature vector for the game state
+  repeated float state_features = 3;
+
+  // The MCTS policy target vector
+  repeated float policy_target = 4;
+
+  // The value estimate from the MCTS root node
+  float value_target = 5;
+
+  // The final outcome of the game (1.0 for win, 0.0 for loss)
+  float actual_game_win_value = 6;
+}

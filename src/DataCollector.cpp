@@ -1,9 +1,9 @@
 #include "include/DataCollector.hpp"
-#include "include/MCTSBot.hpp" // For NN feature extraction helpers
+#include "include/MCTSBot.hpp"
 #include <stdexcept>
-#include <numeric> // For std::accumulate
 
 DataCollector::DataCollector(const std::string & filepath) {
+    // Open in binary mode as Protobuf is a binary format
     file.open(filepath, std::ios::binary | std::ios::app);
     if (!file.is_open()) {
         throw std::runtime_error("Could not open data file for writing: " + filepath);
@@ -17,68 +17,62 @@ DataCollector::~DataCollector() {
 }
 
 void DataCollector::record(const GameState& state, MCTSBot& bot, bool isBidding) {
+    // Create a Protobuf message object instead of a custom struct
     TrainingSample sample;
-    sample.player_idx = state.currentPlayerIndex; // Record the player who made the decision
 
-    if (isBidding) {
-        sample.state_features = extractBidFeatures(state);
-        sample.policy_target = bot.getLastActionProbs(); // Policy for NN1 (bids)
-    }
-    else {
-        sample.state_features = extractPlayFeatures(state);
-        sample.policy_target = bot.getLastActionProbs(); // Policy for NN2 (card plays)
-    }
+    sample.set_is_bidding(isBidding);
+    sample.set_player_idx(state.currentPlayerIndex);
 
-    // Value target comes directly from the MCTS root's value estimate for this state
-    // This is crucial for training a strong value head, rather than just final game outcome.
+    // Get features and policy targets
+    std::vector<float> features = isBidding ? extractBidFeatures(state) : extractPlayFeatures(state);
+    std::vector<float> policy = bot.getLastActionProbs();
     auto value_vec = bot.getLastValueEstimate();
-    if (!value_vec.empty()) {
-        sample.value_target = value_vec[0];
+
+    // Populate the Protobuf message using the generated setters
+    for (float f : features) {
+        sample.add_state_features(f);
     }
-    else {
-        sample.value_target = 0.5f; // Default if MCTS somehow failed to produce a value
+    for (float p : policy) {
+        sample.add_policy_target(p);
     }
 
+    if (!value_vec.empty()) {
+        sample.set_value_target(value_vec[0]);
+    } else {
+        sample.set_value_target(0.5f); // Default value
+    }
+
+    // actual_game_win_value will be set in finalize()
     game_buffer.push_back(sample);
 }
 
 void DataCollector::finalize(int winning_team_id) {
-    // Write all buffered samples for this game with the final outcome
     for (auto& sample : game_buffer) {
-        // Determine the actual win/loss (1.0 for win, 0.0 for loss) for the player's team
-        // This is used for NN3 training, where the final game outcome is the true label.
-        int sample_player_team_id = sample.player_idx % 2;
-        float actual_game_win_value = (sample_player_team_id == winning_team_id) ? 1.0f : 0.0f;
+        // Determine the final game outcome for this player's team
+        int sample_player_team_id = sample.player_idx() % 2;
+        float actual_win = (sample_player_team_id == winning_team_id) ? 1.0f : 0.0f;
+        sample.set_actual_game_win_value(actual_win);
 
-        // Write to file in binary format
-        // Format: [isBidding (int32), player_idx (int32), state_size, state_data, policy_size, policy_data, value_target_from_MCTS, actual_game_win_value]
-        int32_t is_bidding_flag = (sample.policy_target.size() == 14) ? 1 : 0;
-        file.write(reinterpret_cast<const char*>(&is_bidding_flag), sizeof(is_bidding_flag));
+        // Serialize the entire message to a binary string
+        std::string serialized_data;
+        if (!sample.SerializeToString(&serialized_data)) {
+            throw std::runtime_error("Failed to serialize training sample.");
+        }
 
-        int32_t player_idx = sample.player_idx; // Also store player index
-        file.write(reinterpret_cast<const char*>(&player_idx), sizeof(player_idx));
-
-        // Explicitly cast size_t to int32_t to resolve C4267 warnings
-        int32_t state_size = static_cast<int32_t>(sample.state_features.size());
-        file.write(reinterpret_cast<const char*>(&state_size), sizeof(state_size));
-        file.write(reinterpret_cast<const char*>(sample.state_features.data()), state_size * sizeof(float));
-
-        // Explicitly cast size_t to int32_t to resolve C4267 warnings
-        int32_t policy_size = static_cast<int32_t>(sample.policy_target.size());
-        file.write(reinterpret_cast<const char*>(&policy_size), sizeof(policy_size));
-        file.write(reinterpret_cast<const char*>(sample.policy_target.data()), policy_size * sizeof(float));
-
-        file.write(reinterpret_cast<const char*>(&sample.value_target), sizeof(float)); // MCTS value estimate
-        file.write(reinterpret_cast<const char*>(&actual_game_win_value), sizeof(float)); // Actual game win/loss
+        // Write the data using a size-delimited format. This is robust.
+        // 1. Write the size of the upcoming message as a 32-bit integer.
+        // 2. Write the actual message data.
+        int32_t size = serialized_data.size();
+        file.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        file.write(serialized_data.c_str(), size);
     }
     game_buffer.clear();
 }
 
 
-// These feature extraction helpers are moved from MCTSBot.cpp
-// and are used by DataCollector to save the state features.
-// They must match the features expected by your Python NNs.
+// --- Feature extraction helpers do not need to change ---
 std::vector<float> DataCollector::extractBidFeatures(const GameState& state) {
+    // ... same implementation as before
     std::vector<float> features;
     features.push_back(static_cast<float>(state.team1Score));
     features.push_back(static_cast<float>(state.team2Score));
@@ -91,46 +85,21 @@ std::vector<float> DataCollector::extractBidFeatures(const GameState& state) {
 }
 
 std::vector<float> DataCollector::extractPlayFeatures(const GameState& state) {
+    // ... same implementation as before
     std::vector<float> features;
-    // Add team scores and bags
     features.push_back(static_cast<float>(state.team1Score));
     features.push_back(static_cast<float>(state.team2Score));
     features.push_back(static_cast<float>(state.team1Bags));
     features.push_back(static_cast<float>(state.team2Bags));
-
-    // Add all player bids
-    for (int i = 0; i < 4; ++i) {
-        features.push_back(static_cast<float>(state.players[i].bid));
-    }
-
-    // Add cards in hand (52-bit multi-hot encoding)
+    for (int i = 0; i < 4; ++i) { features.push_back(static_cast<float>(state.players[i].bid)); }
     std::vector<bool> hand_encoding(52, false);
-    for (const auto& card : state.players[state.currentPlayerIndex].hand) {
-        hand_encoding[static_cast<int>(card.suit) * 13 + static_cast<int>(card.rank)] = true;
-    }
-    for (bool bit : hand_encoding) {
-        features.push_back(static_cast<float>(bit));
-    }
-
-    // Add cards in current trick (52-bit multi-hot encoding)
+    for (const auto& card : state.players[state.currentPlayerIndex].hand) { hand_encoding[static_cast<int>(card.suit) * 13 + static_cast<int>(card.rank)] = true; }
+    for (bool bit : hand_encoding) { features.push_back(static_cast<float>(bit)); }
     std::vector<bool> trick_encoding(52, false);
-    for (const auto& card : state.currentTrick) {
-        trick_encoding[static_cast<int>(card.suit) * 13 + static_cast<int>(card.rank)] = true;
-    }
-    for (bool bit : trick_encoding) {
-        features.push_back(static_cast<float>(bit));
-    }
-
-    // Add tricks won by each player
-    for (int i = 0; i < 4; ++i) {
-        features.push_back(static_cast<float>(state.players[i].tricksWon));
-    }
-
-    // Indicate if spades are broken
+    for (const auto& card : state.currentTrick) { trick_encoding[static_cast<int>(card.suit) * 13 + static_cast<int>(card.rank)] = true; }
+    for (bool bit : trick_encoding) { features.push_back(static_cast<float>(bit)); }
+    for (int i = 0; i < 4; ++i) { features.push_back(static_cast<float>(state.players[i].tricksWon)); }
     features.push_back(static_cast<float>(state.spadesBroken ? 1.0f : 0.0f));
-
-    // Current player index
     features.push_back(static_cast<float>(state.currentPlayerIndex));
-
     return features;
 }
