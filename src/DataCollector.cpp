@@ -26,6 +26,9 @@ void DataCollector::record(const GameState& state, MCTSBot& bot, bool isBidding)
 
     std::vector<float> features = isBidding ? extractBidFeatures(state) : extractPlayFeatures(state);
     std::vector<float> policy = bot.getLastActionProbs();
+    if (!isBidding && policy.size() < 13) {
+        policy.resize(13, 0.0f);
+    }
     auto value_vec = bot.getLastValueEstimate();
 
     // For 'repeated' fields, loop and use the 'add_*' method

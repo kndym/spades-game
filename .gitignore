@@ -12,3 +12,5 @@
 build
 SpadesEngineVS
 .vscode
+/models
+/data

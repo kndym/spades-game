@@ -4,9 +4,15 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 import os
+import sys
 import argparse
 from tqdm import tqdm
 import test_pb2 as pb# Import the generated module
+
+# Fix Windows console encoding for PyTorch 2.x ONNX export unicode output
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 # --- Model Definitions ---
 
@@ -25,8 +31,7 @@ class BiddingModelNN1(nn.Module):
         return self.network(x)
 
 class PlayingModelNN2(nn.Module):
-    # This is a placeholder architecture. A real one would be more complex.
-    def __init__(self, input_size=50): # Placeholder input size
+    def __init__(self, input_size=118):
         super(PlayingModelNN2, self).__init__()
         self.network = nn.Sequential(
             nn.Linear(input_size, 128),
@@ -76,27 +81,40 @@ def load_training_data_proto(filepath):
                 if state_vec.shape[0] == 8 and policy_vec.shape[0] == 14:
                     samples['bidding'].append((state_vec, policy_vec, value))
             else:
-                # Placeholder for playing data
-                pass
+                # Playing samples use 118 features and a policy target up to 13 actions
+                if state_vec.shape[0] == 118 and 0 < policy_vec.shape[0] <= 13:
+                    if policy_vec.shape[0] < 13:
+                        policy_vec = np.pad(policy_vec, (0, 13 - policy_vec.shape[0]), 'constant')
+                    samples['playing'].append((state_vec, policy_vec, value))
 
     return samples
 
 
 def export_model_to_onnx(model, dummy_input, filepath):
-    """Exports a PyTorch model to ONNX format."""
+    """Exports a PyTorch model to ONNX format using TorchScript."""
     print(f"Exporting model to {filepath}...")
+    model.eval()
+    traced_model = torch.jit.trace(model, dummy_input)
+    # Save traced model to temp file and reload to ensure clean export
+    temp_pt = filepath.replace('.onnx', '_traced.pt')
+    torch.jit.save(traced_model, temp_pt)
+    loaded_model = torch.jit.load(temp_pt)
+    # Use dynamo=False to force legacy export behavior (required for PyTorch 2.x)
     torch.onnx.export(
-        model,
+        loaded_model,
         dummy_input,
         filepath,
         export_params=True,
-        opset_version=10,
+        opset_version=11,
         do_constant_folding=True,
         input_names=['input'],
         output_names=['output'],
-        dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}},
-        dynamo=True
+        verbose=False,
+        dynamo=False
     )
+    # Clean up temp file
+    if os.path.exists(temp_pt):
+        os.remove(temp_pt)
     print("Export complete.")
 
 def generate_random_onnx_model(model_type, input_size, output_dir):
@@ -158,7 +176,7 @@ def main(args):
         else:
             print("Creating new NN1 model...")
 
-        criterion = nn.CrossEntropyLoss()
+        criterion = nn.KLDivLoss(reduction="batchmean")
         optimizer = optim.Adam(model_nn1.parameters(), lr=0.001)
 
         model_nn1.train()
@@ -167,7 +185,8 @@ def main(args):
             for states, policies in progress_bar:
                 optimizer.zero_grad()
                 outputs = model_nn1(states)
-                loss = criterion(outputs, policies)
+                log_probs = torch.log(outputs + 1e-8)
+                loss = criterion(log_probs, policies)
                 loss.backward()
                 optimizer.step()
                 progress_bar.set_postfix({'loss': f'{loss.item():.4f}'})
@@ -180,11 +199,44 @@ def main(args):
         print("No valid bidding data found to train NN1.")
 
     # --- Train Playing Model (NN2) ---
-    # As noted, this part is a placeholder. A full implementation requires
-    # careful handling of state representation and variable-sized policies.
     if all_data['playing']:
         print(f"\nFound {len(all_data['playing'])} playing samples.")
-        print("WARNING: NN2 training is a placeholder and is currently skipped.")
+        X_play = torch.tensor(np.array([item[0] for item in all_data['playing']]), dtype=torch.float32)
+        y_policy_play = torch.tensor(np.array([item[1] for item in all_data['playing']]), dtype=torch.float32)
+
+        train_dataset = TensorDataset(X_play, y_policy_play)
+        train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
+
+        nn2_path_pth = os.path.join(args.output_model_path, "nn2_model.pth")
+        nn2_path_onnx = os.path.join(args.output_model_path, "nn2_model.onnx")
+
+        input_size = X_play.shape[1]
+        model_nn2 = PlayingModelNN2(input_size=input_size)
+        if os.path.exists(nn2_path_pth):
+            print("Loading existing NN2 model to continue training...")
+            model_nn2.load_state_dict(torch.load(nn2_path_pth))
+        else:
+            print("Creating new NN2 model...")
+
+        criterion = nn.KLDivLoss(reduction="batchmean")
+        optimizer = optim.Adam(model_nn2.parameters(), lr=0.001)
+
+        model_nn2.train()
+        for epoch in range(args.epochs):
+            progress_bar = tqdm(train_loader, desc=f"NN2 Epoch {epoch+1}/{args.epochs}", leave=False)
+            for states, policies in progress_bar:
+                optimizer.zero_grad()
+                outputs = model_nn2(states)
+                log_probs = torch.log(outputs + 1e-8)
+                loss = criterion(log_probs, policies)
+                loss.backward()
+                optimizer.step()
+                progress_bar.set_postfix({'loss': f'{loss.item():.4f}'})
+
+        print("NN2 training finished.")
+        torch.save(model_nn2.state_dict(), nn2_path_pth)
+        print(f"PyTorch model saved to {nn2_path_pth}")
+        export_model_to_onnx(model_nn2, torch.randn(1, input_size), nn2_path_onnx)
     else:
         print("\nNo playing data found to train NN2.")
 
