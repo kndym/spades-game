@@ -72,10 +72,10 @@ void runEvaluationMode(int numGames, const std::string& baselinePath, const std:
         int dealerIndex = i % 4;
 
         std::vector<MCTSBot> bots;
-        bots.emplace_back(50, baselineModels.nn1, baselineModels.nn2, baselineModels.nn3);
-        bots.emplace_back(50, candidateModels.nn1, candidateModels.nn2, candidateModels.nn3);
-        bots.emplace_back(50, baselineModels.nn1, baselineModels.nn2, baselineModels.nn3);
-        bots.emplace_back(50, candidateModels.nn1, candidateModels.nn2, candidateModels.nn3);
+        bots.emplace_back(150, baselineModels.nn1, baselineModels.nn2, baselineModels.nn3);
+        bots.emplace_back(150, candidateModels.nn1, candidateModels.nn2, candidateModels.nn3);
+        bots.emplace_back(150, baselineModels.nn1, baselineModels.nn2, baselineModels.nn3);
+        bots.emplace_back(150, candidateModels.nn1, candidateModels.nn2, candidateModels.nn3);
 
         while (!GameLogic::isGameOver(state)) {
             GameLogic::resetForNewRound(state, dealerIndex);

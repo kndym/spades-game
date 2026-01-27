@@ -19,26 +19,32 @@ if sys.platform == 'win32':
 class BiddingModelNN1(nn.Module):
     def __init__(self, input_size=8):
         super(BiddingModelNN1, self).__init__()
+        # Upgraded: 32 -> 64 hidden units, added third layer
         self.network = nn.Sequential(
-            nn.Linear(input_size, 32),
+            nn.Linear(input_size, 64),
             nn.ReLU(),
-            nn.Linear(32, 32),
+            nn.Linear(64, 64),
             nn.ReLU(),
-            nn.Linear(32, 14), # 14 outputs for bids 0-13
+            nn.Linear(64, 64),
+            nn.ReLU(),
+            nn.Linear(64, 14), # 14 outputs for bids 0-13
             nn.Softmax(dim=-1)
         )
     def forward(self, x):
         return self.network(x)
 
 class PlayingModelNN2(nn.Module):
-    def __init__(self, input_size=118):
+    def __init__(self, input_size=326):  # Updated: 118 -> 326 (added 208 card tracking features)
         super(PlayingModelNN2, self).__init__()
+        # Upgraded: 128 -> 384 hidden units, added third layer
         self.network = nn.Sequential(
-            nn.Linear(input_size, 128),
+            nn.Linear(input_size, 384),
             nn.ReLU(),
-            nn.Linear(128, 128),
+            nn.Linear(384, 384),
             nn.ReLU(),
-            nn.Linear(128, 13), # Max 13 cards in hand
+            nn.Linear(384, 256),
+            nn.ReLU(),
+            nn.Linear(256, 13), # Max 13 cards in hand
             nn.Softmax(dim=-1)
         )
     def forward(self, x):
@@ -81,8 +87,8 @@ def load_training_data_proto(filepath):
                 if state_vec.shape[0] == 8 and policy_vec.shape[0] == 14:
                     samples['bidding'].append((state_vec, policy_vec, value))
             else:
-                # Playing samples use 118 features and a policy target up to 13 actions
-                if state_vec.shape[0] == 118 and 0 < policy_vec.shape[0] <= 13:
+                # Playing samples use 326 features (118 original + 208 card tracking) and a policy target up to 13 actions
+                if state_vec.shape[0] == 326 and 0 < policy_vec.shape[0] <= 13:
                     if policy_vec.shape[0] < 13:
                         policy_vec = np.pad(policy_vec, (0, 13 - policy_vec.shape[0]), 'constant')
                     samples['playing'].append((state_vec, policy_vec, value))
@@ -143,10 +149,11 @@ def main(args):
         # Determine actual input sizes for NN1 and NN2
         # For NN1 (Bidding), input_size is 8: [T1_score, T2_score, T1_bags, T2_bags, P1_bid, P2_bid, P3_bid, P4_bid]
         bid_input_size = 8
-        # For NN2 (Playing), input_size is more complex:
+        # For NN2 (Playing), input_size is:
         # 4 (scores/bags) + 4 (bids) + 52 (hand) + 52 (trick) + 4 (tricks_won) + 1 (spades_broken) + 1 (current_player_idx) = 118
-        # If your PlayingModelNN2 default input_size is different, update it here.
-        play_input_size = 118 # As derived from DataCollector::extractPlayFeatures
+        # + 4*52 (card tracking for each player) = 208
+        # Total = 326 features
+        play_input_size = 326 # Updated with card tracking features
         
         generate_random_onnx_model('nn1', bid_input_size, args.output_model_path)
         generate_random_onnx_model('nn2', play_input_size, args.output_model_path)

@@ -1,0 +1,4 @@
+# Place your ONNX model files here:
+# - nn1_model.onnx (bidding network)
+# - nn2_model.onnx (playing network)
+# - nn3_model.onnx (win probability network)

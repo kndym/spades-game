@@ -108,6 +108,8 @@ std::vector<float> stateToNN1Features(const GameState& state) {
 // Helper to convert game state to feature vector for NN2 (Playing)
 std::vector<float> stateToNN2Features(const GameState& state) {
     std::vector<float> features;
+    features.reserve(326); // Pre-allocate: 118 original + 208 card tracking
+    
     // Add team scores and bags
     features.push_back(static_cast<float>(state.team1Score));
     features.push_back(static_cast<float>(state.team2Score));
@@ -137,8 +139,7 @@ std::vector<float> stateToNN2Features(const GameState& state) {
         features.push_back(static_cast<float>(bit));
     }
 
-    // Add trick history (e.g., last 3 tricks played - more complex, placeholder for now)
-    // For simplicity, we'll just add the current number of tricks won by each player
+    // Add tricks won by each player
     for (int i = 0; i < 4; ++i) {
         features.push_back(static_cast<float>(state.players[i].tricksWon));
     }
@@ -148,6 +149,13 @@ std::vector<float> stateToNN2Features(const GameState& state) {
 
     // Current player index
     features.push_back(static_cast<float>(state.currentPlayerIndex));
+
+    // Card tracking features: which cards each player has played (4 players x 52 cards = 208 features)
+    for (int player = 0; player < 4; ++player) {
+        for (int card = 0; card < 52; ++card) {
+            features.push_back(static_cast<float>(state.playedCards[player][card] ? 1.0f : 0.0f));
+        }
+    }
 
     return features;
 }

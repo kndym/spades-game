@@ -70,7 +70,7 @@ void runSelfPlayMode(int numGames, const std::string& modelPath, const std::stri
     DataCollector data_collector(outputFile);
     std::vector<MCTSBot> bots;
     for (int i = 0; i < 4; ++i) {
-        bots.emplace_back(50, nn1, nn2, nn3); // 50 simulations per move
+        bots.emplace_back(150, nn1, nn2, nn3); // 150 simulations per move (increased from 50)
     }
 
     // Create a single random number generator for the entire self-play session

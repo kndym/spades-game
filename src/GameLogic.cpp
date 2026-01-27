@@ -200,6 +200,10 @@ void GameLogic::applyMove(GameState& state, int moveIndex) {
     }
     state.currentTrick.push_back(playedCard);
     
+    // Track which card was played by which player (for card counting features)
+    int cardIndex = static_cast<int>(playedCard.suit) * 13 + static_cast<int>(playedCard.rank);
+    state.playedCards[state.currentPlayerIndex][cardIndex] = true;
+    
     // Remove the card from the player's hand efficiently
     state.players[state.currentPlayerIndex].hand.erase(state.players[state.currentPlayerIndex].hand.begin() + moveIndex);
     
@@ -280,5 +284,9 @@ void GameLogic::resetForNewRound(GameState& state, int dealerIndex) {
         player.hand.clear();
         player.bid = 0;
         player.tricksWon = 0;
+    }
+    // Reset card tracking for new round
+    for (auto& playerCards : state.playedCards) {
+        playerCards.fill(false);
     }
 }

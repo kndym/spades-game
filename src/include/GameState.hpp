@@ -20,6 +20,10 @@ struct GameState {
 
     bool spadesBroken = false;
     std::vector<Card> currentTrick;
+    
+    // Card tracking: which cards each player has played (4 players x 52 cards)
+    // playedCards[player][cardIndex] = true if player has played that card
+    std::array<std::array<bool, 52>, 4> playedCards = {};
 };
 
 #endif // GAMESTATE_HPP

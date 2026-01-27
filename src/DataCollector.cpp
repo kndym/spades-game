@@ -95,6 +95,8 @@ std::vector<float> DataCollector::extractBidFeatures(const GameState& state) {
 
 std::vector<float> DataCollector::extractPlayFeatures(const GameState& state) {
     std::vector<float> features;
+    features.reserve(326); // Pre-allocate for efficiency: 118 original + 208 card tracking
+    
     features.push_back(static_cast<float>(state.team1Score));
     features.push_back(static_cast<float>(state.team2Score));
     features.push_back(static_cast<float>(state.team1Bags));
@@ -109,5 +111,13 @@ std::vector<float> DataCollector::extractPlayFeatures(const GameState& state) {
     for (int i = 0; i < 4; ++i) { features.push_back(static_cast<float>(state.players[i].tricksWon)); }
     features.push_back(static_cast<float>(state.spadesBroken ? 1.0f : 0.0f));
     features.push_back(static_cast<float>(state.currentPlayerIndex));
+    
+    // Card tracking features: which cards each player has played (4 players x 52 cards = 208 features)
+    for (int player = 0; player < 4; ++player) {
+        for (int card = 0; card < 52; ++card) {
+            features.push_back(static_cast<float>(state.playedCards[player][card] ? 1.0f : 0.0f));
+        }
+    }
+    
     return features;
 }
