@@ -14,3 +14,22 @@ SpadesEngineVS
 .vscode
 /models
 /data
+external_bots/
+bot_evaluation/
+
+# build output
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+__pycache__/
+*.pyc
+
+# agent scratch
+*.plan.md
+
+# keep the build file despite the blanket *.txt rule above
+!CMakeLists.txt
+
+# vendored single-header dep; only consumer is bot_evaluation/, which is ignored
+src/include/nlohmann/
