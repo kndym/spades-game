@@ -1,0 +1,32 @@
+{
+  "seed": 83200000,
+  "pairs": 1500,
+  "games": 3000,
+  "unit": "500-point matches",
+  "penalty": 0.4,
+  "winRate": {
+    "mean": 0.49233333333333335,
+    "confidence95": [
+      0.4846378590668248,
+      0.5000288075998419
+    ]
+  },
+  "scoreDifference": {
+    "mean": -2.2013333333333334,
+    "confidence95": [
+      -4.191038739186051,
+      -0.21162792748061565
+    ]
+  },
+  "changedBids": 1436,
+  "totalCandidateBids": 60168,
+  "changeRate": 0.02386650711341577,
+  "incompleteMatches": 0,
+  "maximumHandsPlayed": 18,
+  "elapsedSeconds": 13.0557445,
+  "pairedSeatSwap": true,
+  "baseline": "Frozen learned bidder; identical heuristic card play",
+  "trainingSeedDisjoint": true,
+  "modelSha256": "8526a14c67a34bb3ff6f89adf56c4da01643a9f4437ae53740955934d22352d9",
+  "releaseDecision": "rejected: no independently confirmed incumbent improvement"
+}

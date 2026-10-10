@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "date": "2026-10-10T04:55:52.776Z",
+  "candidate": "Actual Trickster bidding plus our heuristic card play (playing ablation)",
+  "baseline": "Actual TricksterCards/TricksterBots SpadesBot",
+  "baselineSource": "https://github.com/TricksterCards/TricksterBots",
+  "baselineCommit": "3abca057bff801eca00d2d20839c3407db96ebb2",
+  "baselineSubmoduleCommit": "ee9ade9ea2eb159b3959f227d2ac0db22aa710f3",
+  "adapter": "Persistent .NET JSONL; own hand and public history only; no fallback",
+  "rules": {
+    "deck": 52,
+    "players": 4,
+    "partners": "Opposite seats",
+    "target": 500,
+    "nil": 100,
+    "failedNil": "Tricks do not help partner contract, count as bags",
+    "bags": "Overtrick +1; ten bags -100",
+    "spadesLead": "Once broken or only spades remaining",
+    "specialBonuses": false,
+    "blindNil": false
+  },
+  "pairs": 1000,
+  "games": 2000,
+  "seed": 83000000,
+  "unit": "Full 500-point matches",
+  "pairedSeatSwap": true,
+  "winRate": {
+    "mean": 0.282,
+    "confidence95": [
+      0.2642451630298716,
+      0.29975483697012834
+    ]
+  },
+  "scoreAdvantage": {
+    "mean": -108.7015,
+    "confidence95": [
+      -116.49688215407843,
+      -100.90611784592156
+    ]
+  },
+  "completedMatches": 2000,
+  "censoredMatches": 0,
+  "errors": 0,
+  "invalidDecisions": 0,
+  "fallbackDecisions": 0,
+  "externalDecisions": 609240,
+  "externalDecisionMeanMs": 0.211262066321503,
+  "candidateDecisionMeanMs": 0.01656939911084397,
+  "externalNilBids": 1141,
+  "maximumHands": 21,
+  "seconds": 133.68603929999998,
+  "metadata": {
+    "variation": "None",
+    "deckSize": 52,
+    "scoreRoundTrip": {
+      "packed": 143480,
+      "points": 120,
+      "bags": 3,
+      "totalPoints": 123
+    },
+    "nilEncoded": 0,
+    "oneEncoded": 1,
+    "historyProbe": {
+      "cardPlayed": "3H",
+      "highInTrick": "TH"
+    },
+    "playedCardConstructorParameters": [
+      "trickHigh",
+      "myPlay"
+    ]
+  },
+  "limits": [
+    "Released Trickster bot is a credible production-derived baseline, not a verified world champion.",
+    "Same engine and rules for both teams. A model-selection suite must use different seeds from this holdout."
+  ],
+  "adapterVersion": 2,
+  "adapterSourceSha256": "532af39ff4f80417949b070c67cf914bc7870749b1b9b6f2ab5b06c66659915c",
+  "candidatePolicy": "trickster-bid",
+  "candidateSourceHashes": {
+    "ai.js": "6bbc7066ade8fa7162e55bfb05f0e9aa2d25e5c1c23d52a23e89c524d135bb25",
+    "bid-model.js": "15ff5eca2463592572384e1c18434010c1a53ce335bb1e37262a9fbfe88d7228"
+  },
+  "opponentDecisions": 568624,
+  "tricksterDecisions": 609240,
+  "candidateNilBids": 1179,
+  "totalNilBids": 2320,
+  "opponentLatency": {
+    "medianMs": 0.194100000000617,
+    "p95Ms": 0.3286999999982072,
+    "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+  },
+  "candidateLatency": {
+    "medianMs": 0.007299999997485429,
+    "p95Ms": 0.10099999999511056,
+    "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+  }
+}

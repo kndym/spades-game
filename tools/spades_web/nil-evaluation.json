@@ -1,0 +1,32 @@
+{
+  "seed": 88200000,
+  "pairs": 1500,
+  "games": 3000,
+  "unit": "500-point matches",
+  "threshold": 20,
+  "modelSha256": "b65355f9757691e5eb9120ca39904902fa73113cbd44f458dba55b8ab9ca006e",
+  "winRate": {
+    "mean": 0.823,
+    "confidence95": [
+      0.8101759660676706,
+      0.8358240339323293
+    ]
+  },
+  "scoreDifference": {
+    "mean": 135.827,
+    "confidence95": [
+      130.6845161457168,
+      140.9694838542832
+    ]
+  },
+  "nilBids": 6646,
+  "nilSuccesses": 5552,
+  "nilSuccessRate": 0.8353897080950948,
+  "predictedNilSuccessRate": 0.846569578721275,
+  "incompleteMatches": 0,
+  "maximumHandsPlayed": 19,
+  "elapsedSeconds": 5.7075335,
+  "pairedSeatSwap": true,
+  "baseline": "Frozen non-nil learned bidder, identical nil-aware heuristic card play",
+  "trainingSeedDisjoint": true
+}

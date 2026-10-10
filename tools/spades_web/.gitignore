@@ -1,0 +1,11 @@
+external-vendor/
+external-runner/bin/
+external-runner/obj/
+external-pilot.json
+external-pilot.raw.json
+nil-data.json
+value-data.json
+invalidated/
+external-invalid/
+external-ismcts-pilot.json
+external-ismcts-pilot.raw.json

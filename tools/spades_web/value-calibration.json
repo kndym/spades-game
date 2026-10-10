@@ -1,0 +1,186 @@
+{
+  "selection": "highest calibration full-match winrate then scoremargin",
+  "selectedPenalty": 0.4,
+  "results": [
+    {
+      "seed": 82200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "penalty": 0.4,
+      "winRate": {
+        "mean": 0.49166666666666664,
+        "confidence95": [
+          0.47670168835081017,
+          0.5066316449825231
+        ]
+      },
+      "scoreDifference": {
+        "mean": -3.6083333333333334,
+        "confidence95": [
+          -7.532655892040616,
+          0.31598922537394936
+        ]
+      },
+      "changedBids": 260,
+      "totalCandidateBids": 11868,
+      "changeRate": 0.021907650825749917,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 16,
+      "elapsedSeconds": 3.4088899,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen learned bidder; identical heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 82200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "penalty": 0.2,
+      "winRate": {
+        "mean": 0.4766666666666667,
+        "confidence95": [
+          0.449028024831686,
+          0.5043053085016473
+        ]
+      },
+      "scoreDifference": {
+        "mean": -11.418333333333333,
+        "confidence95": [
+          -18.576839722950997,
+          -4.2598269437156695
+        ]
+      },
+      "changedBids": 965,
+      "totalCandidateBids": 11938,
+      "changeRate": 0.08083431060479142,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 18,
+      "elapsedSeconds": 3.257107399999999,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen learned bidder; identical heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 82200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "penalty": 0.1,
+      "winRate": {
+        "mean": 0.44166666666666665,
+        "confidence95": [
+          0.41081195865772,
+          0.4725213746756133
+        ]
+      },
+      "scoreDifference": {
+        "mean": -26.948333333333334,
+        "confidence95": [
+          -36.18189244155988,
+          -17.71477422510679
+        ]
+      },
+      "changedBids": 1839,
+      "totalCandidateBids": 12090,
+      "changeRate": 0.1521091811414392,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 20,
+      "elapsedSeconds": 3.179093499999999,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen learned bidder; identical heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 82200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "penalty": 0.05,
+      "winRate": {
+        "mean": 0.4,
+        "confidence95": [
+          0.36930474891384796,
+          0.4306952510861521
+        ]
+      },
+      "scoreDifference": {
+        "mean": -43.755,
+        "confidence95": [
+          -54.45343343869698,
+          -33.05656656130302
+        ]
+      },
+      "changedBids": 2711,
+      "totalCandidateBids": 12338,
+      "changeRate": 0.2197276706111201,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 20,
+      "elapsedSeconds": 2.8769124999999995,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen learned bidder; identical heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 82200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "penalty": 0.025,
+      "winRate": {
+        "mean": 0.38666666666666666,
+        "confidence95": [
+          0.3545087101747245,
+          0.4188246231586088
+        ]
+      },
+      "scoreDifference": {
+        "mean": -52.24166666666667,
+        "confidence95": [
+          -64.14071446438486,
+          -40.34261886894848
+        ]
+      },
+      "changedBids": 3331,
+      "totalCandidateBids": 12424,
+      "changeRate": 0.26811010946555053,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 20,
+      "elapsedSeconds": 3.1925094999999994,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen learned bidder; identical heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 82200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "penalty": 0,
+      "winRate": {
+        "mean": 0.36666666666666664,
+        "confidence95": [
+          0.3331906287687797,
+          0.4001427045645536
+        ]
+      },
+      "scoreDifference": {
+        "mean": -65.67833333333333,
+        "confidence95": [
+          -78.70046363576624,
+          -52.656203030900414
+        ]
+      },
+      "changedBids": 4227,
+      "totalCandidateBids": 12506,
+      "changeRate": 0.33799776107468416,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 20,
+      "elapsedSeconds": 2.9605509000000003,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen learned bidder; identical heuristic card play",
+      "trainingSeedDisjoint": true
+    }
+  ]
+}

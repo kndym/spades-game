@@ -1,0 +1,8 @@
+# Preserve the exact bytes pinned by external benchmark provenance.
+tools/spades_web/external-runner/Program.cs -text
+tools/spades_web/external-ismcts.py -text
+spades-web/*-model.json -text
+spades-web/play-model.js -text
+spades-web/play-policy.js -text
+spades-web/ai.js -text
+spades-web/bid-model.js -text

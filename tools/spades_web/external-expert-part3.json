@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "date": "2026-10-10T04:56:33.346Z",
+  "candidate": "Learned bidding plus public-information search (12 determinizations)",
+  "baseline": "Actual TricksterCards/TricksterBots SpadesBot",
+  "baselineSource": "https://github.com/TricksterCards/TricksterBots",
+  "baselineCommit": "3abca057bff801eca00d2d20839c3407db96ebb2",
+  "baselineSubmoduleCommit": "ee9ade9ea2eb159b3959f227d2ac0db22aa710f3",
+  "adapter": "Persistent .NET JSONL; own hand and public history only; no fallback",
+  "rules": {
+    "deck": 52,
+    "players": 4,
+    "partners": "Opposite seats",
+    "target": 500,
+    "nil": 100,
+    "failedNil": "Tricks do not help partner contract, count as bags",
+    "bags": "Overtrick +1; ten bags -100",
+    "spadesLead": "Once broken or only spades remaining",
+    "specialBonuses": false,
+    "blindNil": false
+  },
+  "pairs": 100,
+  "games": 200,
+  "seed": 82000200,
+  "unit": "Full 500-point matches",
+  "pairedSeatSwap": true,
+  "winRate": {
+    "mean": 0.29,
+    "confidence95": [
+      0.23226554693506593,
+      0.34773445306493406
+    ]
+  },
+  "scoreAdvantage": {
+    "mean": -126.485,
+    "confidence95": [
+      -153.37118919765538,
+      -99.59881080234462
+    ]
+  },
+  "completedMatches": 200,
+  "censoredMatches": 0,
+  "errors": 0,
+  "invalidDecisions": 0,
+  "fallbackDecisions": 0,
+  "externalDecisions": 60116,
+  "externalDecisionMeanMs": 0.33913776365691317,
+  "candidateDecisionMeanMs": 7.507878867522827,
+  "externalNilBids": 128,
+  "maximumHands": 20,
+  "seconds": 473.01191140000003,
+  "metadata": {
+    "variation": "None",
+    "deckSize": 52,
+    "scoreRoundTrip": {
+      "packed": 143480,
+      "points": 120,
+      "bags": 3,
+      "totalPoints": 123
+    },
+    "nilEncoded": 0,
+    "oneEncoded": 1,
+    "historyProbe": {
+      "cardPlayed": "3H",
+      "highInTrick": "TH"
+    },
+    "playedCardConstructorParameters": [
+      "trickHigh",
+      "myPlay"
+    ]
+  },
+  "limits": [
+    "Released Trickster bot is a credible production-derived baseline, not a verified world champion.",
+    "Same engine and rules for both teams. A model-selection suite must use different seeds from this holdout."
+  ],
+  "adapterVersion": 2,
+  "adapterSourceSha256": "532af39ff4f80417949b070c67cf914bc7870749b1b9b6f2ab5b06c66659915c",
+  "candidatePolicy": "incumbent",
+  "candidateSourceHashes": {
+    "ai.js": "6bbc7066ade8fa7162e55bfb05f0e9aa2d25e5c1c23d52a23e89c524d135bb25",
+    "bid-model.js": "15ff5eca2463592572384e1c18434010c1a53ce335bb1e37262a9fbfe88d7228"
+  },
+  "opponentDecisions": 60116,
+  "tricksterDecisions": 60116,
+  "candidateNilBids": 0,
+  "totalNilBids": 128,
+  "opponentLatency": {
+    "medianMs": 0.32420000003185123,
+    "p95Ms": 0.5089000000007218,
+    "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+  },
+  "candidateLatency": {
+    "medianMs": 5.659199999994598,
+    "p95Ms": 24.9091000000044,
+    "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+  }
+}

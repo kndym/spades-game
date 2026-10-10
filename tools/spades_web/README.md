@@ -10,7 +10,7 @@ Four players, opposite-seat partnerships, clockwise bidding/play, 52-card deck a
 
 `engine.js` is authoritative deterministic state and rules. Card IDs are `suit * 13 + rank - 2`, with clubs, diamonds, hearts, spades in that order. `publicObservation` copies only the acting player's own hand, public scores/bids/tricks/card history, inferred void suits and opponent hand sizes. It never copies another hand or the deck seed. `ai-worker.js` accepts only this observation. Rule tests include action invariance when the actual hidden hands are exchanged.
 
-Easy uses a documented hand-strength heuristic. Standard adds a learned hand-aware bidder. Expert uses the same bidder and 12 constrained hidden-deal samples per play. All candidate cards are compared on the same sampled worlds, followed by public-observation heuristic rollouts to hand end. Samples respect known played cards, hand sizes and public voids. This is determinization with a rollout policy, not equilibrium solving or an omniscient bot. It can suffer strategy fusion and the assumptions of its rollout opponent.
+Easy uses a documented hand-strength heuristic. Standard uses the learned hand-aware bidder and a compact legal-action card-play network distilled from the released Trickster bot. Search (experimental; internal difficulty key `expert`) retains the original bidder and 12 constrained hidden-deal samples per play. All candidate cards are compared on the same sampled worlds, followed by public-observation heuristic rollouts to hand end. Samples respect known played cards, hand sizes and public voids. This is determinization with a rollout policy, not equilibrium solving or an omniscient bot. It can suffer strategy fusion and the assumptions of its rollout opponent.
 
 ## Training
 
@@ -36,8 +36,29 @@ The original neural bidder's eight inputs contain scores, bags and previous bids
 
 ## Recorded results (2026-10-10)
 
-Standard's learned bidder won 89.68% of 6,000 held-out 500-point matches against the documented heuristic bidder (3,000 paired seeds, pair-cluster 95% interval 88.94–90.42%). Both teams used identical heuristic play. Mean final score advantage was 140.76 points (interval 138.48–143.04). Every match finished; the longest took 21 hands. This measures the improvement over this modest bidding baseline, not general Spades strength.
+The original learned bidder won 89.68% of 6,000 held-out 500-point matches against the documented heuristic bidder (3,000 paired seeds, pair-cluster 95% interval 88.94–90.42%). Both teams used identical heuristic play. Mean final score advantage was 140.76 points (interval 138.48–143.04). Every match finished; the longest took 21 hands. This measures the improvement over this modest bidding baseline, not general Spades strength.
 
-Expert's public-information search won 53.80% of 2,000 held-out single hands against Standard (1,000 paired seeds, independent confirmation block 70500000, interval 52.58–55.02%). Both teams used the same learned bidder. Mean hand score advantage was 4.62 points (interval 2.51–6.73). This ablation starts hands from zero scores/bags; it does not establish a 500-point-match win rate for Expert. The earlier 200-pair pilot used a separate block and was not used for model calibration.
+The original public-information search won 53.80% of 2,000 held-out single hands against Standard (1,000 paired seeds, independent confirmation block 70500000, interval 52.58–55.02%). Both teams used the same learned bidder. Mean hand score advantage was 4.62 points (interval 2.51–6.73). This ablation starts hands from zero scores/bags; it does not establish a 500-point-match win rate for Expert. The earlier 200-pair pilot used a separate block and was not used for model calibration.
 
 The recorded Expert evaluation took 302.46 seconds on one local Node process. Mean decision time over both teams' card plays was 2.90 milliseconds, including Standard's much cheaper turns; this is not an Expert-only or mobile latency claim. Training and the final Standard test took about 5.58 and 17.84 seconds respectively on this run, sharing the host with other tasks. Runtime measurements are informational, not a fixed performance guarantee.
+
+
+## Current Standard: teacher-trained card play
+
+A 183-feature, 64/32-hidden-unit action ranker learns public-information Trickster demonstrations from 4,000 hands. The 301 KB frozen model remains `play-policy-model.json`; `play-model.js` is an exact browser export. The own-hand normal bidder stays unchanged. Training, calibration, internal confirmation and external holdouts use separate seed blocks. Legal cards are masked before ranking. Privacy and checkpoint-export tests verify the browser inference boundary.
+
+Independent internal confirmation: 54.00% wins in 3,000 full matches against original Standard, pair-cluster interval 52.51–55.49%; final score advantage +19.03 (13.93–24.12). On 2,000 full matches against actual released Trickster, the student won 38.10% (36.13–40.07%). Original Standard won 28.70% on the identical deals. Paired gain: +9.40 percentage points (7.04–11.76), final score improvement +43.58 (34.43–52.73). Trickster still wins most matches.
+
+The ordinary bid-value neural pilot failed; the nil pilot gained internally but worsened external scoring and was rejected. Neither is used by Standard. The original search has no confirmed full-match advantage against Trickster and is labeled experimental. See [research.md](research.md), [external-README.md](external-README.md) and the public `/spades/ai-report.html` for opponents, rules, source pins, raw outcomes, limitations and the adapted ISMCTS comparison.
+
+```powershell
+node tools/spades_web/play-data.mjs --hands 4000 --seed 92200000
+python tools/spades_web/play-train.py
+node tools/spades_web/export-play-model.mjs
+node tools/spades_web/play-evaluate.mjs --pairs 1500 --seed 94200000
+node tools/spades_web/external-evaluate.mjs --candidate play --pairs 1000 --seed 95200000 --out tools/spades_web/external-play.json
+node --test tools/spades_web/engine.test.mjs tools/spades_web/play-policy.test.mjs tools/spades_web/external.test.mjs tools/spades_web/external-ismcts.test.mjs
+node tools/spades_web/report.mjs
+```
+
+Teacher attribution: [TricksterCards/TricksterBots](https://github.com/TricksterCards/TricksterBots), Ted Johnson, MIT license, pinned revision `3abca057bff801eca00d2d20839c3407db96ebb2`. Teacher code runs only during data generation and evaluation; it is not copied into browser inference. Python training uses PyTorch on CPU; the large generated matrix is memory-mapped and removed after hashing. The browser game needs no Python, .NET, GPU or remote inference service.

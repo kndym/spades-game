@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "date": "2026-10-10T05:00:46.931Z",
+  "candidate": "Learned normal bidding plus public-information Trickster-imitation card ranker",
+  "baseline": "Actual TricksterCards/TricksterBots SpadesBot",
+  "baselineSource": "https://github.com/TricksterCards/TricksterBots",
+  "baselineCommit": "3abca057bff801eca00d2d20839c3407db96ebb2",
+  "baselineSubmoduleCommit": "ee9ade9ea2eb159b3959f227d2ac0db22aa710f3",
+  "adapter": "Persistent .NET JSONL; own hand and public history only; no fallback",
+  "rules": {
+    "deck": 52,
+    "players": 4,
+    "partners": "Opposite seats",
+    "target": 500,
+    "nil": 100,
+    "failedNil": "Tricks do not help partner contract, count as bags",
+    "bags": "Overtrick +1; ten bags -100",
+    "spadesLead": "Once broken or only spades remaining",
+    "specialBonuses": false,
+    "blindNil": false
+  },
+  "pairs": 1000,
+  "games": 2000,
+  "seed": 95200000,
+  "unit": "Full 500-point matches",
+  "pairedSeatSwap": true,
+  "winRate": {
+    "mean": 0.381,
+    "confidence95": [
+      0.36130810132888963,
+      0.4006918986711104
+    ]
+  },
+  "scoreAdvantage": {
+    "mean": -52.137,
+    "confidence95": [
+      -60.171304334486514,
+      -44.10269566551349
+    ]
+  },
+  "completedMatches": 2000,
+  "censoredMatches": 0,
+  "errors": 0,
+  "invalidDecisions": 0,
+  "fallbackDecisions": 0,
+  "externalDecisions": 572824,
+  "externalDecisionMeanMs": 0.22842303412567427,
+  "candidateDecisionMeanMs": 0.23576081274525193,
+  "externalNilBids": 1183,
+  "maximumHands": 19,
+  "seconds": 271.0563973,
+  "metadata": {
+    "variation": "None",
+    "deckSize": 52,
+    "scoreRoundTrip": {
+      "packed": 143480,
+      "points": 120,
+      "bags": 3,
+      "totalPoints": 123
+    },
+    "nilEncoded": 0,
+    "oneEncoded": 1,
+    "historyProbe": {
+      "cardPlayed": "3H",
+      "highInTrick": "TH"
+    },
+    "playedCardConstructorParameters": [
+      "trickHigh",
+      "myPlay"
+    ]
+  },
+  "limits": [
+    "Released Trickster bot is a credible production-derived baseline, not a verified world champion.",
+    "Same engine and rules for both teams. A model-selection suite must use different seeds from this holdout."
+  ],
+  "adapterVersion": 2,
+  "adapterSourceSha256": "532af39ff4f80417949b070c67cf914bc7870749b1b9b6f2ab5b06c66659915c",
+  "candidatePolicy": "play",
+  "candidateSourceHashes": {
+    "ai.js": "6bbc7066ade8fa7162e55bfb05f0e9aa2d25e5c1c23d52a23e89c524d135bb25",
+    "bid-model.js": "15ff5eca2463592572384e1c18434010c1a53ce335bb1e37262a9fbfe88d7228",
+    "play-policy.js": "06be434fc52c817a021fbb071ce43cedaeaccb182e625d94915fe6bb12e356ad",
+    "play-policy-model.json": "cd175bd4cb4fbb768ac003bed8d5c9c3da80a0b64e336c6bb06a1aed6d57e649"
+  },
+  "opponentDecisions": 572824,
+  "tricksterDecisions": 572824,
+  "candidateNilBids": 0,
+  "totalNilBids": 1183,
+  "opponentLatency": {
+    "medianMs": 0.21600000001490116,
+    "p95Ms": 0.3381999999983236,
+    "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+  },
+  "candidateLatency": {
+    "medianMs": 0.19039999999222346,
+    "p95Ms": 0.6898000000219326,
+    "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+  }
+}

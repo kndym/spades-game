@@ -1,0 +1,10 @@
+"""Memory-mapped, sequential-batch teacher ranking; no full dataset tensor."""
+import pathlib,json,time,hashlib,torch,numpy as np
+ROOT=pathlib.Path(__file__).resolve().parent;torch.set_num_threads(2);torch.manual_seed(92200000);started=time.perf_counter();meta=json.loads((ROOT/'play-data-meta.json').read_text());n=meta['groups'];f=meta['features'];data=np.memmap(ROOT/'play-data.bin',dtype=np.float32,mode='r',shape=(n,1+4*f));model=torch.nn.Sequential(torch.nn.Linear(f,64),torch.nn.ReLU(),torch.nn.Linear(64,32),torch.nn.ReLU(),torch.nn.Linear(32,1));opt=torch.optim.Adam(model.parameters(),lr=.0015);losses=[];accuracies=[]
+for epoch in range(12):
+    lossSum=0;hits=0
+    # Sequential reads keep working set bounded; each group randomizes negatives.
+    for start in range(0,n,512):
+        rows=np.array(data[start:start+512],copy=True);count=torch.from_numpy(rows[:,0].copy()).long();x=torch.from_numpy(rows[:,1:].copy()).reshape(-1,4,f);logits=model(x).squeeze(-1);logits=logits.masked_fill(torch.arange(4).unsqueeze(0)>=count.unsqueeze(1),-1e9);target=torch.zeros(len(rows),dtype=torch.long);loss=torch.nn.functional.cross_entropy(logits,target);opt.zero_grad();loss.backward();opt.step();lossSum+=loss.item()*len(rows);hits+=(logits.argmax(1)==0).sum().item()
+    losses.append(lossSum/n);accuracies.append(hits/n);print(f'Epoch {epoch+1}: CE{losses[-1]:.4f}, teacher agreement{accuracies[-1]:.3%}',flush=True)
+layers=[{'weight':m.weight.detach().tolist(),'bias':m.bias.detach().tolist()}for m in model if isinstance(m,torch.nn.Linear)];out={'version':1,'method':'Public-observation Trickster teacher action ranking','trainingSeed':meta['seed'],'trainingHands':meta['hands'],'featureCount':f,'layers':layers,'deployed':False};(ROOT.parent.parent/'spades-web'/'play-policy-model.json').write_text(json.dumps(out));meta.update(losses=losses,trainingGroupAgreement=accuracies,trainingSeconds=time.perf_counter()-started,threads=2,torchVersion=torch.__version__,datasetBytes=(ROOT/'play-data.bin').stat().st_size);(ROOT/'play-training.json').write_text(json.dumps(meta,indent=2));print(f'Learner completed in {time.perf_counter()-started:.2f}s',flush=True)

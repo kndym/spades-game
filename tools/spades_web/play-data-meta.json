@@ -1,0 +1,34 @@
+{
+  "hands": 4000,
+  "seed": 92200000,
+  "groups": 163551,
+  "features": 183,
+  "teacherDecisions": 174219,
+  "seconds": 59.6342478,
+  "teacher": "TricksterCards/TricksterBots SpadesBot, persistent public-observation .NETv2 wrapper",
+  "trajectories": "1/3 full teacher selfplay;2/3 mixed own frozen bidding/teacher-or-heuristic play vs teacher; training data only",
+  "metadata": {
+    "variation": "None",
+    "deckSize": 52,
+    "scoreRoundTrip": {
+      "packed": 143480,
+      "points": 120,
+      "bags": 3,
+      "totalPoints": 123
+    },
+    "nilEncoded": 0,
+    "oneEncoded": 1,
+    "historyProbe": {
+      "cardPlayed": "3H",
+      "highInTrick": "TH"
+    },
+    "playedCardConstructorParameters": [
+      "trickHigh",
+      "myPlay"
+    ]
+  },
+  "format": "Float32 records: candidateCount then4padded candidatefeaturevectors; teacherchoiceindex0",
+  "informationBoundary": "Own hand, public history and legal cards only; no opponent hands sent to teacher",
+  "teacherSourceCommit": "3abca057bff801eca00d2d20839c3407db96ebb2",
+  "adapterSourceSha256": "532af39ff4f80417949b070c67cf914bc7870749b1b9b6f2ab5b06c66659915c"
+}

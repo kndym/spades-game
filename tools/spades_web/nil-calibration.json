@@ -1,0 +1,198 @@
+{
+  "selectedThreshold": 20,
+  "selection": "Calibration full-match winrate then score margin",
+  "results": [
+    {
+      "seed": 87200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "threshold": 20,
+      "modelSha256": "510d6d91b58ccc2a1338982097a087d373f0976ae03d9eef9dcec9b27a289894",
+      "winRate": {
+        "mean": 0.8083333333333333,
+        "confidence95": [
+          0.7788993631160843,
+          0.8377673035505824
+        ]
+      },
+      "scoreDifference": {
+        "mean": 125.21833333333333,
+        "confidence95": [
+          113.92132944805775,
+          136.51533721860892
+        ]
+      },
+      "nilBids": 1346,
+      "nilSuccesses": 1095,
+      "nilSuccessRate": 0.8135215453194651,
+      "predictedNilSuccessRate": 0.8428514059654605,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 16,
+      "elapsedSeconds": 1.1532152,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen non-nil learned bidder, identical nil-aware heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 87200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "threshold": 10,
+      "modelSha256": "510d6d91b58ccc2a1338982097a087d373f0976ae03d9eef9dcec9b27a289894",
+      "winRate": {
+        "mean": 0.8033333333333333,
+        "confidence95": [
+          0.7727102544266612,
+          0.8339564122400055
+        ]
+      },
+      "scoreDifference": {
+        "mean": 128.86,
+        "confidence95": [
+          115.77144022893948,
+          141.94855977106056
+        ]
+      },
+      "nilBids": 1544,
+      "nilSuccesses": 1215,
+      "nilSuccessRate": 0.7869170984455959,
+      "predictedNilSuccessRate": 0.8242886679295734,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 16,
+      "elapsedSeconds": 1.2105255,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen non-nil learned bidder, identical nil-aware heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 87200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "threshold": 30,
+      "modelSha256": "510d6d91b58ccc2a1338982097a087d373f0976ae03d9eef9dcec9b27a289894",
+      "winRate": {
+        "mean": 0.7933333333333333,
+        "confidence95": [
+          0.7642967211724384,
+          0.8223699454942283
+        ]
+      },
+      "scoreDifference": {
+        "mean": 116.37166666666667,
+        "confidence95": [
+          105.26699537961478,
+          127.47633795371856
+        ]
+      },
+      "nilBids": 1135,
+      "nilSuccesses": 954,
+      "nilSuccessRate": 0.8405286343612335,
+      "predictedNilSuccessRate": 0.8608946260671506,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 15,
+      "elapsedSeconds": 1.0129542000000007,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen non-nil learned bidder, identical nil-aware heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 87200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "threshold": 0,
+      "modelSha256": "510d6d91b58ccc2a1338982097a087d373f0976ae03d9eef9dcec9b27a289894",
+      "winRate": {
+        "mean": 0.785,
+        "confidence95": [
+          0.7540390593824382,
+          0.8159609406175619
+        ]
+      },
+      "scoreDifference": {
+        "mean": 127.55,
+        "confidence95": [
+          113.7388319426582,
+          141.36116805734179
+        ]
+      },
+      "nilBids": 1738,
+      "nilSuccesses": 1330,
+      "nilSuccessRate": 0.7652474108170311,
+      "predictedNilSuccessRate": 0.8055761630551862,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 17,
+      "elapsedSeconds": 1.3605996,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen non-nil learned bidder, identical nil-aware heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 87200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "threshold": 40,
+      "modelSha256": "510d6d91b58ccc2a1338982097a087d373f0976ae03d9eef9dcec9b27a289894",
+      "winRate": {
+        "mean": 0.7666666666666667,
+        "confidence95": [
+          0.7369161119906562,
+          0.7964172213426772
+        ]
+      },
+      "scoreDifference": {
+        "mean": 101.515,
+        "confidence95": [
+          91.28905009349083,
+          111.74094990650917
+        ]
+      },
+      "nilBids": 944,
+      "nilSuccesses": 808,
+      "nilSuccessRate": 0.8559322033898306,
+      "predictedNilSuccessRate": 0.879952763561652,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 15,
+      "elapsedSeconds": 1.1966493,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen non-nil learned bidder, identical nil-aware heuristic card play",
+      "trainingSeedDisjoint": true
+    },
+    {
+      "seed": 87200000,
+      "pairs": 300,
+      "games": 600,
+      "unit": "500-point matches",
+      "threshold": 60,
+      "modelSha256": "510d6d91b58ccc2a1338982097a087d373f0976ae03d9eef9dcec9b27a289894",
+      "winRate": {
+        "mean": 0.7016666666666667,
+        "confidence95": [
+          0.6720008056928014,
+          0.7313325276405319
+        ]
+      },
+      "scoreDifference": {
+        "mean": 75.315,
+        "confidence95": [
+          66.71162138391387,
+          83.91837861608613
+        ]
+      },
+      "nilBids": 620,
+      "nilSuccesses": 551,
+      "nilSuccessRate": 0.8887096774193548,
+      "predictedNilSuccessRate": 0.9073834312106778,
+      "incompleteMatches": 0,
+      "maximumHandsPlayed": 15,
+      "elapsedSeconds": 1.3834282000000002,
+      "pairedSeatSwap": true,
+      "baseline": "Frozen non-nil learned bidder, identical nil-aware heuristic card play",
+      "trainingSeedDisjoint": true
+    }
+  ]
+}

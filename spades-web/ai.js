@@ -8,6 +8,8 @@ import {
   publicObservation,
 } from "./engine.js";
 import { BID_MODEL } from "./bid-model.js";
+import { PLAY_MODEL } from "./play-model.js";
+import { policyPlay } from "./play-policy.js";
 export function bidFeatures(o) {
   const counts = [0, 0, 0, 0],
     aces = [0, 0, 0, 0],
@@ -214,7 +216,9 @@ export function chooseAction(o, { difficulty = "standard" } = {}) {
         : learnedBid(o)
       : difficulty === "expert"
         ? searchPlay(o)
-        : heuristicPlay(o);
+        : difficulty === "easy"
+          ? heuristicPlay(o)
+          : policyPlay(o, PLAY_MODEL);
   return {
     type,
     value,
@@ -225,7 +229,7 @@ export function chooseAction(o, { difficulty = "standard" } = {}) {
           ? "public-information determinization"
           : difficulty === "easy"
             ? "heuristic"
-            : "self-play calibrated bidding",
+            : "learned bidding and public-information teacher-trained card play",
     },
   };
 }

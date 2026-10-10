@@ -1,0 +1,67 @@
+{
+  "hands": 4000,
+  "seed": 92200000,
+  "groups": 163551,
+  "features": 183,
+  "teacherDecisions": 174219,
+  "seconds": 59.6342478,
+  "teacher": "TricksterCards/TricksterBots SpadesBot, persistent public-observation .NETv2 wrapper",
+  "trajectories": "1/3 full teacher selfplay;2/3 mixed own frozen bidding/teacher-or-heuristic play vs teacher; training data only",
+  "metadata": {
+    "variation": "None",
+    "deckSize": 52,
+    "scoreRoundTrip": {
+      "packed": 143480,
+      "points": 120,
+      "bags": 3,
+      "totalPoints": 123
+    },
+    "nilEncoded": 0,
+    "oneEncoded": 1,
+    "historyProbe": {
+      "cardPlayed": "3H",
+      "highInTrick": "TH"
+    },
+    "playedCardConstructorParameters": [
+      "trickHigh",
+      "myPlay"
+    ]
+  },
+  "format": "Float32 records: candidateCount then4padded candidatefeaturevectors; teacherchoiceindex0",
+  "informationBoundary": "Own hand, public history and legal cards only; no opponent hands sent to teacher",
+  "losses": [
+    0.6746440220008599,
+    0.4422974180556339,
+    0.38052042090036575,
+    0.3456202921010585,
+    0.32179138297918075,
+    0.3050032531229452,
+    0.2922450251160134,
+    0.2823503149850541,
+    0.273751177715206,
+    0.26691941320890683,
+    0.2606274883001572,
+    0.2542460365175976
+  ],
+  "trainingGroupAgreement": [
+    0.7281031604820515,
+    0.8271670610390642,
+    0.8515386637807167,
+    0.8660662423341955,
+    0.8757390661017053,
+    0.8823363965980031,
+    0.8878270386607235,
+    0.8921376206810108,
+    0.8956472293046206,
+    0.8985270649522168,
+    0.9006059272031354,
+    0.9036814204743474
+  ],
+  "trainingSeconds": 23.358009400079027,
+  "threads": 2,
+  "torchVersion": "2.10.0+cpu",
+  "datasetBytes": 479531532,
+  "teacherSourceCommit": "3abca057bff801eca00d2d20839c3407db96ebb2",
+  "adapterSourceSha256": "532af39ff4f80417949b070c67cf914bc7870749b1b9b6f2ab5b06c66659915c",
+  "datasetSha256": "561aea5a91c0beb335a810b6a231c296395dcd90ec59209c833e8a00e128b3cc"
+}

@@ -1,0 +1,32 @@
+{
+  "pairs": 300,
+  "games": 600,
+  "seed": 93200000,
+  "unit": "Full500pointmatches",
+  "pairedSeatSwap": true,
+  "modelSha256": "cd175bd4cb4fbb768ac003bed8d5c9c3da80a0b64e336c6bb06a1aed6d57e649",
+  "winRate": {
+    "mean": 0.56,
+    "confidence95": [
+      0.527331148345092,
+      0.5926688516549081
+    ]
+  },
+  "scoreDifference": {
+    "mean": 24.42,
+    "confidence95": [
+      13.215556625891134,
+      35.62444337410887
+    ]
+  },
+  "incompleteMatches": 0,
+  "maximumHandsPlayed": 22,
+  "candidateCardLatency": {
+    "meanMs": 0.12824914994878228,
+    "medianMs": 0.10850000000027649,
+    "p95Ms": 0.343199999999797
+  },
+  "elapsedSeconds": 22.187408599999998,
+  "baseline": "Frozen incumbent heuristic play; identical learned normal bidding",
+  "trainingSeedsDisjoint": true
+}
