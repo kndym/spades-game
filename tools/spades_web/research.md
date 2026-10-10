@@ -119,3 +119,6 @@ node --test tools/spades_web/play-policy.test.mjs
 
 
 The frozen teacher student passed its matched external release gate: 38.10% wins against the actual Trickster bot over 2,000 full matches, compared with 28.70% for original Standard on the exact same deals. Paired gain +9.40 percentage points (95% interval +7.04 to +11.76); final score margin improvement +43.58 (34.43 to 52.73). The teacher remains stronger. This measured gain supports using the student in Standard, while the learned nil and normal-bid pilots remain rejected. A second adapted search comparison is reported separately in the evaluation report.
+
+
+The independent adapted ISMCTS128 comparison used 100 paired deals / 200 full matches per policy on fresh seed 96200000. Current Standard won 50.0% (43.62–56.38%), original Standard 47.5% (41.53–53.47%). Paired win-rate change +2.5 percentage points (−5.43 to +10.43); score-margin change +9.96 (−19.71 to +39.63). This is inconclusive, so no generalization gain is claimed. All matches completed with zero errors, illegal decisions, adapter replacement fallbacks or censorship. Source/model hashes remained frozen; raw per-seed outcomes and the paired calculation are saved.

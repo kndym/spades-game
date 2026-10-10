@@ -1,10 +1,11 @@
 {
   "deployed": true,
-  "status": "promoted to Standard after independent internal and matched external gains",
+  "status": "promoted to Standard after independent internal and matched Trickster gains; second-opponent comparison inconclusive",
   "modelSha256": "cd175bd4cb4fbb768ac003bed8d5c9c3da80a0b64e336c6bb06a1aed6d57e649",
   "bidPolicy": "unchanged learned normal bidder; no learned nil promotion",
   "playPolicy": "public-information Trickster-trained legal-action ranker",
   "externalOpponent": "TricksterCards/TricksterBots 3abca057bff801eca00d2d20839c3407db96ebb2",
   "externalGate": "external-play-paired.json; paired win and score confidence intervals above zero",
-  "limitation": "The teacher remains stronger; this establishes improvement over the incumbent, not strongest-bot status."
+  "limitation": "The teacher remains stronger; this establishes improvement over the incumbent, not strongest-bot status.",
+  "secondaryGate": "200 full matches per policy against adapted ISMCTS128; +2.5 percentage points, 95% interval -5.43 to +10.43"
 }

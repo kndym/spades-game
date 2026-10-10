@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "date": "2026-10-10T05:13:21.619Z",
+  "candidate": "Learned bidding plus heuristic play",
+  "baseline": "Released ISMCTS tree algorithm with corrected public-information partnership state and upstream bidder",
+  "baselineSource": "https://github.com/jdfreden/Spades",
+  "baselineCommit": "8b924def0fde39fdde23b85b4d4ace7ca0ca20fe",
+  "baselineSubmoduleCommit": null,
+  "adapter": "Python JSONL; published tree algorithm unchanged, state/rules adapted; no actual hidden hands or fallback",
+  "rules": {
+    "deck": 52,
+    "players": 4,
+    "partners": "Opposite seats",
+    "target": 500,
+    "nil": 100,
+    "failedNil": "Tricks do not help partner contract, count as bags",
+    "bags": "Overtrick +1; ten bags -100",
+    "spadesLead": "Once broken or only spades remaining",
+    "specialBonuses": false,
+    "blindNil": false
+  },
+  "pairs": 50,
+  "games": 100,
+  "seed": 96200050,
+  "unit": "Full 500-point matches",
+  "pairedSeatSwap": true,
+  "winRate": {
+    "mean": 0.46,
+    "confidence95": [
+      0.3721674320083946,
+      0.5478325679916054
+    ]
+  },
+  "scoreAdvantage": {
+    "mean": -8.48,
+    "confidence95": [
+      -50.7065340353669,
+      33.746534035366906
+    ]
+  },
+  "completedMatches": 100,
+  "censoredMatches": 0,
+  "errors": 0,
+  "invalidDecisions": 0,
+  "fallbackDecisions": 0,
+  "externalDecisions": 30324,
+  "externalDecisionMeanMs": 18.213487076243396,
+  "candidateDecisionMeanMs": 0.013504867431621423,
+  "externalNilBids": 84,
+  "maximumHands": 21,
+  "seconds": 553.4302677,
+  "metadata": {
+    "variation": "None",
+    "deckSize": 52,
+    "scoreRoundTrip": {
+      "points": 120,
+      "bags": 3,
+      "totalPoints": 123
+    },
+    "nilEncoded": 0,
+    "oneEncoded": 1,
+    "iterations": 128,
+    "stateAdapter": "Common partnership rules, public void-consistent sampling; upstream ISMCTS unchanged"
+  },
+  "limits": [
+    "Research algorithm baseline at the stated search budget, not a verified strongest commercial bot.",
+    "Original state scores individual contracts and samples played cards; our replacement uses common partnership rules and public void constraints.",
+    "No published claim that this work-in-progress engine is a championship opponent."
+  ],
+  "adapterVersion": 2,
+  "adapterSourceSha256": "7ea3c51d4ca86b0e1ce2bc4224a2d3ec459aa4f05bd6769f37f78994a9a4a672",
+  "candidatePolicy": "incumbent",
+  "candidateSourceHashes": {
+    "ai.js": "46cc3decccf4f4746bb39929fafb4fe832cb7741f541058a6fa2a3d244ae20a5",
+    "bid-model.js": "15ff5eca2463592572384e1c18434010c1a53ce335bb1e37262a9fbfe88d7228"
+  },
+  "opponentDecisions": 30324,
+  "tricksterDecisions": 30324,
+  "candidateNilBids": 0,
+  "totalNilBids": 84,
+  "opponentLatency": {
+    "medianMs": 16.883700000005774,
+    "p95Ms": 44.709800000011455,
+    "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+  },
+  "candidateLatency": {
+    "medianMs": 0.012399999977787957,
+    "p95Ms": 0.02649999997811392,
+    "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+  },
+  "iterations": 128
+}

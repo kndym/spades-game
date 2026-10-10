@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "baseline": "tools/spades_web/external-ismcts-play-control.json",
+  "candidate": "tools/spades_web/external-ismcts-play.json",
+  "seed": 96200000,
+  "pairs": 100,
+  "gamesPerCandidate": 200,
+  "adapterVersion": 2,
+  "adapterSourceSha256": "7ea3c51d4ca86b0e1ce2bc4224a2d3ec459aa4f05bd6769f37f78994a9a4a672",
+  "winRateChange": {
+    "mean": 0.025,
+    "confidence95": [
+      -0.054255309225338604,
+      0.1042553092253386
+    ]
+  },
+  "scoreMarginChange": {
+    "mean": 9.96,
+    "confidence95": [
+      -19.71195326635589,
+      39.63195326635589
+    ]
+  },
+  "interpretation": "Candidate minus incumbent on the exact same deal-seed and partnership-seat clusters. Positive means improvement."
+}

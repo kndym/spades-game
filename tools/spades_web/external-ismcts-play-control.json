@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "date": "2026-10-10T05:14:00.820Z",
+  "candidate": "Learned bidding plus heuristic play",
+  "baseline": "Released ISMCTS tree algorithm with corrected public-information partnership state and upstream bidder",
+  "baselineSource": "https://github.com/jdfreden/Spades",
+  "baselineCommit": "8b924def0fde39fdde23b85b4d4ace7ca0ca20fe",
+  "baselineSubmoduleCommit": null,
+  "adapter": "Python JSONL; published tree algorithm unchanged, state/rules adapted; no actual hidden hands or fallback",
+  "rules": {
+    "deck": 52,
+    "players": 4,
+    "partners": "Opposite seats",
+    "target": 500,
+    "nil": 100,
+    "failedNil": "Tricks do not help partner contract, count as bags",
+    "bags": "Overtrick +1; ten bags -100",
+    "spadesLead": "Once broken or only spades remaining",
+    "specialBonuses": false,
+    "blindNil": false
+  },
+  "pairs": 100,
+  "games": 200,
+  "seed": 96200000,
+  "unit": "Full 500-point matches",
+  "pairedSeatSwap": true,
+  "winRate": {
+    "mean": 0.475,
+    "confidence95": [
+      0.41529136400719563,
+      0.5347086359928044
+    ]
+  },
+  "scoreAdvantage": {
+    "mean": 0.705,
+    "confidence95": [
+      -24.658837435652792,
+      26.06883743565279
+    ]
+  },
+  "completedMatches": 200,
+  "censoredMatches": 0,
+  "errors": 0,
+  "invalidDecisions": 0,
+  "fallbackDecisions": 0,
+  "externalDecisions": 60060,
+  "externalDecisionMeanMs": 18.214754861804863,
+  "candidateDecisionMeanMs": 0.0138846570096646,
+  "externalNilBids": 169,
+  "maximumHands": 21,
+  "seconds": 1096.2476848,
+  "metadata": {
+    "variation": "None",
+    "deckSize": 52,
+    "scoreRoundTrip": {
+      "points": 120,
+      "bags": 3,
+      "totalPoints": 123
+    },
+    "nilEncoded": 0,
+    "oneEncoded": 1,
+    "iterations": 128,
+    "stateAdapter": "Common partnership rules, public void-consistent sampling; upstream ISMCTS unchanged"
+  },
+  "limits": [
+    "Research algorithm baseline at the stated search budget, not a verified strongest commercial bot.",
+    "Original state scores individual contracts and samples played cards; our replacement uses common partnership rules and public void constraints.",
+    "No published claim that this work-in-progress engine is a championship opponent."
+  ],
+  "adapterVersion": 2,
+  "adapterSourceSha256": "7ea3c51d4ca86b0e1ce2bc4224a2d3ec459aa4f05bd6769f37f78994a9a4a672",
+  "candidatePolicy": "incumbent",
+  "candidateSourceHashes": {
+    "ai.js": "46cc3decccf4f4746bb39929fafb4fe832cb7741f541058a6fa2a3d244ae20a5",
+    "bid-model.js": "15ff5eca2463592572384e1c18434010c1a53ce335bb1e37262a9fbfe88d7228"
+  },
+  "opponentDecisions": 60060,
+  "tricksterDecisions": 60060,
+  "candidateNilBids": 0,
+  "totalNilBids": 169,
+  "opponentLatency": {
+    "note": "See per-shard medians/P95; a median of medians is not an aggregate percentile"
+  },
+  "candidateLatency": {
+    "note": "See per-shard medians/P95; a median of medians is not an aggregate percentile"
+  },
+  "iterations": 128,
+  "elapsedWallSeconds": 553.4364169921874,
+  "shards": [
+    {
+      "file": "tools/spades_web/external-ismcts-play-control-part1.json",
+      "seed": 96200000,
+      "pairs": 50,
+      "seconds": 542.8174171,
+      "opponentLatency": {
+        "medianMs": 16.716099999961443,
+        "p95Ms": 45.154000000009546,
+        "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+      },
+      "candidateLatency": {
+        "medianMs": 0.013199999986682087,
+        "p95Ms": 0.02829999994719401,
+        "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+      }
+    },
+    {
+      "file": "tools/spades_web/external-ismcts-play-control-part2.json",
+      "seed": 96200050,
+      "pairs": 50,
+      "seconds": 553.4302677,
+      "opponentLatency": {
+        "medianMs": 16.883700000005774,
+        "p95Ms": 44.709800000011455,
+        "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+      },
+      "candidateLatency": {
+        "medianMs": 0.012399999977787957,
+        "p95Ms": 0.02649999997811392,
+        "unit": "All bid/card decisions; subprocess timings include JSON IPC"
+      }
+    }
+  ]
+}

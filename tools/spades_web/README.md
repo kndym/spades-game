@@ -62,3 +62,6 @@ node tools/spades_web/report.mjs
 ```
 
 Teacher attribution: [TricksterCards/TricksterBots](https://github.com/TricksterCards/TricksterBots), Ted Johnson, MIT license, pinned revision `3abca057bff801eca00d2d20839c3407db96ebb2`. Teacher code runs only during data generation and evaluation; it is not copied into browser inference. Python training uses PyTorch on CPU; the large generated matrix is memory-mapped and removed after hashing. The browser game needs no Python, .NET, GPU or remote inference service.
+
+
+The independent adapted ISMCTS128 comparison used 100 paired deals / 200 full matches per policy on fresh seed 96200000. Current Standard won 50.0% (43.62–56.38%), original Standard 47.5% (41.53–53.47%). Paired win-rate change +2.5 percentage points (−5.43 to +10.43); score-margin change +9.96 (−19.71 to +39.63). This is inconclusive, so no generalization gain is claimed. All matches completed with zero errors, illegal decisions, adapter replacement fallbacks or censorship. Source/model hashes remained frozen; raw per-seed outcomes and the paired calculation are saved.

@@ -27,8 +27,13 @@ try {
  }
  if(r.secondaryBenchmarks?.length){
   add('h2','A second, adapted search opponent');
-  for(const e of r.secondaryBenchmarks) add('p',`${e.candidate}: ${pct(e.winRate.mean)} over ${e.games.toLocaleString()} full matches (${ci(e.winRate.confidence95)}). This uses a published ISMCTS tree search with a corrected public-state and partnership-scoring adapter; it is not an untouched commercial bot or a ranking of the strongest available players.`);
+  add('p','Published ISMCTS tree search at 128 iterations per decision, with a corrected public-state and partnership-scoring adapter. This is an adapted research baseline, not an untouched commercial bot or a ranking of the strongest players.');
+  const table=add('table',''),row=add('tr','',add('thead','',table));
+  for(const text of ['Policy','Matches','Win rate · 95% interval'])add('th',text,row);
+  const body=add('tbody','',table),names={'ismcts':'Rejected nil pilot','ismcts-play':'Current Standard','ismcts-play-control':'Original Standard on same deals'};
+  for(const e of r.secondaryBenchmarks){const row=add('tr','',body);add('td',names[e.name],row);add('td',e.games.toLocaleString(),row);add('td',`${pct(e.winRate.mean)} · ${ci(e.winRate.confidence95)}`,row);}
   if(r.secondaryPairedComparison){const p=r.secondaryPairedComparison;add('p',`The trained player’s matched win-rate change was ${points(100*p.winRateChange.mean)} percentage points (95% interval ${p.winRateChange.confidence95.map(x=>points(100*x)).join('–')}); final score advantage changed by ${points(p.scoreMarginChange.mean)} points (${p.scoreMarginChange.confidence95.map(points).join('–')}).`);}
+  add('p','This smaller comparison is inconclusive: it establishes neither a gain nor a regression against the second opponent.');
  }
  if(r.nilUtilityExperiment){const e=r.nilUtilityExperiment,t=e.training,v=e.evaluation;
   add('h2','Learning when to bid nil');
