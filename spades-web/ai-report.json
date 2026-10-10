@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "date": "2026-10-10",
+  "informationPolicy": "AI receives only its own hand and public observations; hidden actual hands and deck seed excluded.",
+  "training": {
+    "method": "Ridge regression of tricks from public own-hand features; score-calibrated offset",
+    "hands": 12000,
+    "playerSamples": 48000,
+    "seed": 20261010,
+    "calibrationPairedHands": 1200,
+    "calibrationSeed": 20361010,
+    "calibrationSeatSwap": true,
+    "selectedOffset": -0.4,
+    "featureCount": 21
+  },
+  "standardEvaluation": {
+    "version": 1,
+    "seed": 70400000,
+    "pairs": 3000,
+    "games": 6000,
+    "unit": "500-point matches",
+    "candidate": "learned bidding with shared heuristic play",
+    "baseline": "hand-strength heuristic bidding with same heuristic play",
+    "pairedSeatSwap": true,
+    "maximumHandsPlayed": 21,
+    "incompleteMatches": 0,
+    "winRate": {
+      "mean": 0.8968333333333334,
+      "confidence95": [
+        0.8894456805403429,
+        0.9042209861263238
+      ]
+    },
+    "scoreDifference": {
+      "mean": 140.75733333333332,
+      "confidence95": [
+        138.4765245573301,
+        143.03814210933655
+      ]
+    },
+    "averageMoveMilliseconds": 0.003187816193971415,
+    "elapsedSeconds": 17.8414236,
+    "trainingSeedDisjoint": true
+  },
+  "expertAblation": {
+    "version": 1,
+    "seed": 70500000,
+    "pairs": 1000,
+    "games": 2000,
+    "unit": "single hands",
+    "candidate": "learned bidding plus public-information search",
+    "baseline": "learned bidding with shared heuristic play",
+    "pairedSeatSwap": true,
+    "winRate": {
+      "mean": 0.538,
+      "confidence95": [
+        0.525823588599485,
+        0.5501764114005151
+      ]
+    },
+    "scoreDifference": {
+      "mean": 4.617,
+      "confidence95": [
+        2.5087301847364176,
+        6.725269815263582
+      ]
+    },
+    "averageMoveMilliseconds": 2.9042899173076813,
+    "elapsedSeconds": 302.46407159999995,
+    "trainingSeedDisjoint": true
+  },
+  "limitations": [
+    "Not an Elo rating, human-strength estimate, or comparison with strong external bots.",
+    "The baseline is a modest documented heuristic; bidding and search tests answer separate questions.",
+    "AI currently avoids nil bids; humans may bid nil.",
+    "Determinization assumes heuristic rollout opponents and can suffer strategy fusion.",
+    "Node measurements are not phone latency guarantees."
+  ],
+  "reproduce": [
+    "node --test tools/spades_web/engine.test.mjs",
+    "node tools/spades_web/train.mjs --hands 12000 --seed 20261010",
+    "node tools/spades_web/evaluate.mjs --pairs 3000 --seed 70400000",
+    "node tools/spades_web/evaluate.mjs --pairs 1000 --seed 70500000 --search --one-hand"
+  ]
+}

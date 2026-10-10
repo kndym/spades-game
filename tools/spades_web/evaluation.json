@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "seed": 70400000,
+  "pairs": 3000,
+  "games": 6000,
+  "unit": "500-point matches",
+  "candidate": "learned bidding with shared heuristic play",
+  "baseline": "hand-strength heuristic bidding with same heuristic play",
+  "pairedSeatSwap": true,
+  "maximumHandsPlayed": 21,
+  "incompleteMatches": 0,
+  "winRate": {
+    "mean": 0.8968333333333334,
+    "confidence95": [
+      0.8894456805403429,
+      0.9042209861263238
+    ]
+  },
+  "scoreDifference": {
+    "mean": 140.75733333333332,
+    "confidence95": [
+      138.4765245573301,
+      143.03814210933655
+    ]
+  },
+  "averageMoveMilliseconds": 0.003187816193971415,
+  "elapsedSeconds": 17.8414236,
+  "trainingSeedDisjoint": true
+}

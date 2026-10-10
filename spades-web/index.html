@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123d33"><meta name="description" content="A game of partnership Spades. Read the table, trust your partner, and play against AI in your browser.">
+  <title>Spades · A Weak Prior</title><link rel="icon" href="./assets/spade.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<main class="game-shell">
+  <header class="topbar"><a class="wordmark" href="/" aria-label="A Weak Prior projects"><span aria-hidden="true">♠</span> spades<span class="brand-separator"> / </span><small>a weak prior</small></a><nav><button id="rules-button">How to play</button><button id="settings-button" aria-label="Game settings">Settings</button><button id="new-game" class="new-game">New game <span aria-hidden="true">↗</span></button></nav></header>
+  <section class="scorebar" aria-label="Team scores"><div class="team-score your-team"><span>You + North</span><strong id="score-us">0</strong><small id="bags-us">0 bags</small></div><div class="match-info"><span id="hand-number">HAND 1</span><span id="target-label">FIRST TO 500</span></div><div class="team-score opponents"><span>West + East</span><strong id="score-them">0</strong><small id="bags-them">0 bags</small></div></section>
+  <section class="table" aria-label="Spades playing table">
+    <div class="table-ring" aria-hidden="true"></div>
+    <div class="player north" id="player-2"></div><div class="player west" id="player-1"></div><div class="player east" id="player-3"></div>
+    <div class="table-center"><div class="trick-cards" id="trick" aria-label="Current trick"></div><div id="table-watermark" aria-hidden="true">♠</div><div class="turn-message" id="message" role="status" aria-live="polite"></div></div>
+    <div class="bid-panel" id="bid-panel" hidden><span class="eyebrow">YOUR CONTRACT</span><h1>How many tricks?</h1><p id="bid-hint">Bid what you can win. Your partner bids separately.</p><div class="bid-options" id="bid-options"></div><button class="primary" id="submit-bid">Bid 3 tricks</button><small>Nil means taking no tricks, for ±100 points.</small></div>
+    <div class="result-panel" id="result-panel" hidden></div>
+    <div class="player south" id="player-0"></div>
+    <div class="hand-area"><div class="hand-label"><span id="hand-instruction">Your hand</span><span id="spades-status">Spades unbroken</span></div><div class="hand" id="hand" aria-label="Your cards"></div></div>
+  </section>
+  <footer class="game-footer"><span id="contract-summary">Make your bid. Protect your partner.</span><button id="history-button">Scorecard <span aria-hidden="true">↗</span></button></footer>
+</main>
+<dialog id="rules-dialog"><div class="dialog-heading"><h2>A little table etiquette</h2><button class="close-dialog" aria-label="Close">×</button></div><p>You and North play as a team against West and East. There are 13 tricks in each hand; spades are always trump.</p><ol><li><strong>Bid your tricks.</strong> You and your partner combine your bids. A bid of zero is nil: you promise to win none.</li><li><strong>Follow suit.</strong> Play the led suit if you have it. Otherwise, play any card. You cannot lead spades until someone has played one off suit, unless you only have spades.</li><li><strong>Highest card wins.</strong> The highest spade wins, or the highest card of the led suit if nobody played a spade.</li><li><strong>Make your contract.</strong> Earn 10 points per bid trick, plus one point per extra trick (a bag). Miss the contract and lose 10 points per bid trick.</li><li><strong>Watch the bags.</strong> Every 10 bags costs 100 points. A successful nil earns 100; a failed nil loses 100. Tricks from a failed nil count as bags, not toward your partner's contract.</li></ol><p>The first team to the target wins after a hand, provided they have the higher score. A tie continues the game. No blind nil or passing.</p><p class="fine-print">AI thinks in a background worker, using its own hand and the public play history. It cannot see your cards. <a href="./ai-report.html">Read about the AI and its evaluation →</a></p></dialog>
+<dialog id="settings-dialog"><div class="dialog-heading"><h2>Your table</h2><button class="close-dialog" aria-label="Close">×</button></div><label>Opponents + partner<select id="difficulty"><option value="easy">Casual</option><option value="standard">Standard</option><option value="expert">Thoughtful</option></select></label><p class="setting-note">Higher difficulty spends more time evaluating possible unseen hands.</p><label>Game length<select id="target"><option value="250">Quick · 250 points</option><option value="500">Classic · 500 points</option><option value="1000">Long · 1,000 points</option></select></label><p class="setting-note">The target applies when you start a new game.</p><label>Table pace<select id="pace"><option value="normal">Relaxed</option><option value="quick">Quick</option></select></label><button id="settings-done" class="primary">Back to the table</button></dialog>
+<dialog id="history-dialog"><div class="dialog-heading"><h2>Scorecard</h2><button class="close-dialog" aria-label="Close">×</button></div><div id="history-content"></div></dialog>
+<dialog id="restart-dialog"><div class="dialog-heading"><h2>A fresh deal?</h2><button class="close-dialog" aria-label="Close">×</button></div><p>Start a new match with a shuffled deck and reset both team scores.</p><div class="dialog-actions"><button class="close-dialog">Keep playing</button><button id="confirm-restart" class="primary">New game</button></div></dialog>
+<script type="module" src="./app.js"></script>
+</body></html>
